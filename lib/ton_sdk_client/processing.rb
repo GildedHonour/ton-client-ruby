@@ -183,21 +183,19 @@ module TonSdk
         raise ArgumentError.new("with `send_events` set to true, `custom_response_handler` may not be nil")
       end
 
-      Interop::request_to_native_lib(
+      resp = Interop::request_to_native_lib(
         ctx,
         "processing.send_message",
         params.to_h.to_json,
         custom_response_handler: custom_response_handler,
         single_thread_only: false
-      ) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfSendMessage.new(resp.result["shard_block_id"])
-          )
-        else
-          yield resp
-        end
-
+      )
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfSendMessage.new(resp.result["shard_block_id"])
+        )
+      else
+        resp
       end
     end
 
@@ -206,25 +204,24 @@ module TonSdk
         raise ArgumentError.new("with `send_events` set to true, `custom_response_handler` may not be nil")
       end
 
-      Interop::request_to_native_lib(
+      resp = Interop::request_to_native_lib(
         ctx,
         "processing.wait_for_transaction",
         params.to_h.to_json,
         custom_response_handler: custom_response_handler,
         single_thread_only: false
-      ) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfProcessMessage.new(
-              transaction: resp.result["transaction"],
-              out_messages: resp.result["out_messages"],
-              decoded: resp.result["decoded"],
-              fees: resp.result["fees"]
-            )
+      )
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfProcessMessage.new(
+            transaction: resp.result["transaction"],
+            out_messages: resp.result["out_messages"],
+            decoded: resp.result["decoded"],
+            fees: resp.result["fees"]
           )
-        else
-          yield resp
-        end
+        )
+      else
+        resp
       end
     end
 
@@ -233,25 +230,30 @@ module TonSdk
         raise ArgumentError.new("with `send_events` set to true `custom_response_handler` may not be nil")
       end
 
-      Interop::request_to_native_lib(
+      resp = Interop::request_to_native_lib(
         ctx,
         "processing.process_message",
         params.to_h.to_json,
-        custom_response_handler: custom_response_handler,
+        # custom_response_handler: custom_response_handler,
         single_thread_only: false
-      ) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfProcessMessage.new(
-              transaction: resp.result["transaction"],
-              out_messages: resp.result["out_messages"],
-              decoded: resp.result["decoded"],
-              fees: resp.result["fees"]
-            )
+      )
+
+      case resp.type_
+      when :success
+        NativeLibResponsetResult.new(
+          result: ResultOfProcessMessage.new(
+            transaction: resp.result["transaction"],
+            out_messages: resp.result["out_messages"],
+            decoded: resp.result["decoded"],
+            fees: resp.result["fees"]
           )
-        else
-          yield resp
-        end
+        )
+
+      when :custom
+        custom_response_handler.call(resp)
+
+      else
+        resp
       end
     end
   end

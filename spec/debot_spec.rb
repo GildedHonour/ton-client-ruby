@@ -8,8 +8,8 @@ describe TonSdk::Debot do
   context "methods of debot" do
     it "#start" do
       pr1 = TonSdk::Debot::ParamsOfStart.new("abc")
-      expect { |b| TonSdk::Debot.start(@c_ctx.context, pr1, &b) }.to yield_control
-      TonSdk::Debot.start(@c_ctx.context, pr1) { |a| @res = a }
+      # expect { |b| TonSdk::Debot.start(@c_ctx.context, pr1, &b) }.to yield_control
+      @res = TonSdk::Debot.start(@c_ctx.context, pr1)
 
       # expect(@res.success?).to eq true
     end

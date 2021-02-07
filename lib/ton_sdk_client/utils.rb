@@ -61,15 +61,14 @@ module TonSdk
     # functions
     #
 
-    def self.convert_address(ctx, prm)
-      Interop::request_to_native_lib(ctx, "utils.convert_address", prm.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: Utils::ResultOfConvertAddress.new(resp.result["address"])
-          )
-        else
-          yield resp
-        end
+    def self.convert_address(ctx, params)
+      resp = Interop::request_to_native_lib(ctx, "utils.convert_address", params.to_h.to_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: Utils::ResultOfConvertAddress.new(resp.result["address"])
+        )
+      else
+        resp
       end
     end
   end

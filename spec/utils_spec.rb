@@ -15,10 +15,7 @@ describe TonSdk::Utils do
         output_format: TonSdk::Utils::AddressStringFormat.new(type_: :hex)
       )
 
-      expect { |b| TonSdk::Utils.convert_address(@c_ctx.context, pr1, &b) }.to yield_control
-      expect { |b| TonSdk::Utils.convert_address(@c_ctx.context, pr1, &b) }.to yield_with_args(TonSdk::NativeLibResponsetResult)
-
-      TonSdk::Utils.convert_address(@c_ctx.context, pr1) { |a| @res1 = a }
+      @res1 = TonSdk::Utils.convert_address(@c_ctx.context, pr1)
       expect(@res1.success?).to eq true
       expect(@res1.result.address).to eq hex_workchain0
 
@@ -29,10 +26,7 @@ describe TonSdk::Utils do
         output_format: TonSdk::Utils::AddressStringFormat.new(type_: :account_id)
       )
 
-      expect { |b| TonSdk::Utils.convert_address(@c_ctx.context, pr2, &b) }.to yield_control
-      expect { |b| TonSdk::Utils.convert_address(@c_ctx.context, pr2, &b) }.to yield_with_args(TonSdk::NativeLibResponsetResult)
-
-      TonSdk::Utils.convert_address(@c_ctx.context, pr2) { |a| @res2 = a }
+      @res2 = TonSdk::Utils.convert_address(@c_ctx.context, pr2)
       expect(@res2.success?).to eq true
       expect(@res2.result.address).to eq account_id
 
@@ -47,10 +41,7 @@ describe TonSdk::Utils do
         )
       )
 
-      expect { |b| TonSdk::Utils.convert_address(@c_ctx.context, pr3, &b) }.to yield_control
-      expect { |b| TonSdk::Utils.convert_address(@c_ctx.context, pr3, &b) }.to yield_with_args(TonSdk::NativeLibResponsetResult)
-
-      TonSdk::Utils.convert_address(@c_ctx.context, pr3) { |a| @res3 = a }
+      @res3 = TonSdk::Utils.convert_address(@c_ctx.context, pr3)
       expect(@res3.success?).to eq true
       expect(@res3.result.address).to eq base64
 
@@ -65,10 +56,7 @@ describe TonSdk::Utils do
         )
       )
 
-      expect { |b| TonSdk::Utils.convert_address(@c_ctx.context, pr4, &b) }.to yield_control
-      expect { |b| TonSdk::Utils.convert_address(@c_ctx.context, pr4, &b) }.to yield_with_args(TonSdk::NativeLibResponsetResult)
-
-      TonSdk::Utils.convert_address(@c_ctx.context, pr4) { |a| @res4 = a }
+      @res4 = TonSdk::Utils.convert_address(@c_ctx.context, pr4)
       expect(@res4.success?).to eq true
       expect(@res4.result.address).to eq base64url
     end

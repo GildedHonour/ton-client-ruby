@@ -8,12 +8,9 @@ abi1 = TonSdk::Abi::Abi.new(
 
 tvc1_cont_bin = IO.binread("#{EXAMPLES_DATA_DIR}/contracts/abi_v2/Events.tvc")
 tvc1 = Base64::strict_encode64(tvc1_cont_bin)
-
-
-TonSdk::Crypto::generate_random_sign_keys(@c_ctx.context) do |res|
-  if res.success?
-    @keys = res.result
-  end
+res = TonSdk::Crypto::generate_random_sign_keys(@c_ctx.context)
+if res.success?
+  @keys = res.result
 end
 
 sleep(0.1) until @keys
@@ -44,9 +41,8 @@ pr1 = TonSdk::Processing::ParamsOfProcessMessage.new(
   send_events: true
 )
 
-TonSdk::Processing.process_message(@c_ctx.context, pr1, cb) do |res|
-  puts res
-end
+res = TonSdk::Processing.process_message(@c_ctx.context, pr1, cb)
+puts res
 
 # required, to keep the main thread alive
 loop do

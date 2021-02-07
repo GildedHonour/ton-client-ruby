@@ -6,10 +6,9 @@ p1 = TonSdk::Utils::ParamsOfConvertAddress.new(
   address: account_id,
   output_format: TonSdk::Utils::AddressStringFormat.new(type_: :hex)
 )
-TonSdk::Utils.convert_address(@c_ctx.context, p1) do |res|
-  if res.success?
-    puts "convert_address"
-    puts "\tsource: #{account_id}"
-    puts "\tresult: #{res.result.address}"
-  end
+res = TonSdk::Utils.convert_address(@c_ctx.context, p1)
+if res.success?
+  puts "convert_address"
+  puts "\tsource: #{account_id}"
+  puts "\tresult: #{res.result.address}"
 end

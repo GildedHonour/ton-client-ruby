@@ -177,67 +177,69 @@ module TonSdk
       end
     end
 
+
+    #
+    # functions
+    #
+
     def self.run_executor(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(
+       resp = Interop::request_to_native_lib(
         ctx,
         "tvm.run_executor",
         pr_json,
         single_thread_only: false
-      ) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfRunExecutor.new(
-              transaction: resp.result["transaction"],
-              out_messages: resp.result["out_messages"],
-              decoded: resp.result["decoded"],
-              account: resp.result["account"],
-              fees: resp.result["fees"]
-            )
+      )
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfRunExecutor.new(
+            transaction: resp.result["transaction"],
+            out_messages: resp.result["out_messages"],
+            decoded: resp.result["decoded"],
+            account: resp.result["account"],
+            fees: resp.result["fees"]
           )
-        else
-          yield resp
-        end
+        )
+      else
+        resp
       end
     end
 
     def self.run_tvm(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(
+      resp = Interop::request_to_native_lib(
         ctx,
         "tvm.run_tvm",
         pr_json,
         single_thread_only: false
-      ) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfRunTvm.new(
-              out_messages: resp.result["out_messages"],
-              decoded: resp.result["decoded"],
-              account: resp.result["account"]
-            )
+      )
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfRunTvm.new(
+            out_messages: resp.result["out_messages"],
+            decoded: resp.result["decoded"],
+            account: resp.result["account"]
           )
-        else
-          yield resp
-        end
+        )
+      else
+        resp
       end
     end
 
     def self.run_get(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(
+      resp = Interop::request_to_native_lib(
         ctx,
         "tvm.run_get",
         pr_json,
         single_thread_only: false
-      ) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfRunGet.new(resp.result["output"])
-          )
-        else
-          yield resp
-        end
+      )
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfRunGet.new(resp.result["output"])
+        )
+      else
+        resp
       end
     end
   end

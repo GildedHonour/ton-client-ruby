@@ -294,20 +294,20 @@ module TonSdk
         end
       end
 
-      Interop::request_to_native_lib(
+      resp = Interop::request_to_native_lib(
         ctx,
         "debot.start",
         params.to_h.to_json,
         app_obj_handler: app_resp_handler,
         single_thread_only: false
-      ) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: RegisteredDebot.new(resp.result["debot_handle"])
-          )
-        else
-          yield resp
-        end
+      )
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: RegisteredDebot.new(resp.result["debot_handle"])
+        )
+      else
+        resp
+      end
       end
     end
 
@@ -390,57 +390,32 @@ module TonSdk
         end
       end
 
-      Interop::request_to_native_lib(
+      resp = Interop::request_to_native_lib(
         ctx,
         "debot.fetch",
         params.to_h.to_json,
         app_obj_handler: app_obj_handler,
         single_thread_only: false
-      ) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: RegisteredDebot.new(resp.result["debot_handle"])
-          )
-        else
-          yield resp
-        end
+      )
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: RegisteredDebot.new(resp.result["debot_handle"])
+        )
+      else
+        resp
       end
     end
 
     def self.execute(ctx, params)
-      Interop::request_to_native_lib(ctx, "debot.execute", params.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: nil
-          )
-        else
-          yield resp
-        end
-      end
+      Interop::request_to_native_lib(ctx, "debot.execute", params.to_h.to_json)
     end
 
     def self.remove(ctx, params)
-      Interop::request_to_native_lib(ctx, "debot.remove", params.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: nil
-          )
-        else
-          yield resp
-        end
-      end
+      Interop::request_to_native_lib(ctx, "debot.remove", params.to_h.to_json)
     end
 
     def self.send(ctx, params)
-      Interop::request_to_native_lib(ctx, "debot.send", params.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: nil
-          )
-        else
-          yield resp
-        end
-      end
+      Interop::request_to_native_lib(ctx, "debot.send", params.to_h.to_json)
     end
   end
 end

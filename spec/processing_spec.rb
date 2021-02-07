@@ -20,16 +20,11 @@ describe TonSdk::Processing do
         signer: TonSdk::Abi::Signer.new(type_: :keys, keys: keys)
       )
 
-      TonSdk::Abi.encode_message(@c_ctx.context, pr_s1) { |a| @res1 = a }
+      @res1 = TonSdk::Abi.encode_message(@c_ctx.context, pr_s1)
       expect(@res1.success?).to eq true
-
-
       # TODO finish up
 
-
-
       get_grams_from_giver(@c_ctx.context, @res1.result.address)
-
 
       pr_s2 = TonSdk::Processing::ParamsOfSendMessage.new(
         abi: abi,
@@ -42,7 +37,7 @@ describe TonSdk::Processing do
         @events.push(a)
       end
 
-      TonSdk::Processing::send_message(@c_ctx.context, pr_s2, resp_handler) { |a| @res2 = a }
+      @res2 = TonSdk::Processing::send_message(@c_ctx.context, pr_s2, resp_handler)
       timeout_at2 = get_timeout_for_async_operation()
       is_next_iter2 = @res2.nil?
       while is_next_iter2
@@ -61,7 +56,7 @@ describe TonSdk::Processing do
         send_events: true
       )
 
-      TonSdk::Processing::wait_for_transaction(@c_ctx.context, pr_s3, resp_handler) { |a| @res3 = a }
+      @res3 = TonSdk::Processing::wait_for_transaction(@c_ctx.context, pr_s3, resp_handler)
 
       timeout_at3 = get_timeout_for_async_operation()
       is_next_iter3 = @res3.nil?

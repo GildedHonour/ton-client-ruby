@@ -189,7 +189,7 @@ module TonSdk
             NativeLibResponsetResult.new(type_: :notify, result: tc_data_json_content)
 
           when TcResponseCodes::CUSTOM
-            NativeLibResponsetResult.new(type_: :custom, result: nil)
+            NativeLibResponsetResult.new(type_: :custom, result: tc_data_json_content)
 
           else
             raise ArgumentError.new("unsupported response type: #{response_type}")
