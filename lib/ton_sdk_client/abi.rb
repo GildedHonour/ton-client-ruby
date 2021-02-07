@@ -781,104 +781,97 @@ module TonSdk
 
     def self.encode_message_body(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "abi.encode_message_body", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfEncodeMessageBody.new(
-              body: resp.result["body"],
-              data_to_sign: resp.result["data_to_sign"])
-            )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "abi.encode_message_body", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfEncodeMessageBody.new(
+            body: resp.result["body"],
+            data_to_sign: resp.result["data_to_sign"])
+          )
+      else
+        resp
       end
     end
 
     def self.attach_signature_to_message_body(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "abi.attach_signature_to_message_body", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfAttachSignatureToMessageBody.new(resp.result["body"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "abi.attach_signature_to_message_body", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfAttachSignatureToMessageBody.new(resp.result["body"])
+        )
+      else
+        resp
       end
     end
 
     def self.encode_message(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "abi.encode_message", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfEncodeMessage.new(
-              message: resp.result["message"],
-              data_to_sign: resp.result["data_to_sign"],
-              address: resp.result["address"],
-              message_id: resp.result["message_id"]
-            )
+      resp = Interop::request_to_native_lib(ctx, "abi.encode_message", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfEncodeMessage.new(
+            message: resp.result["message"],
+            data_to_sign: resp.result["data_to_sign"],
+            address: resp.result["address"],
+            message_id: resp.result["message_id"]
           )
-        else
-          yield resp
-        end
+        )
+      else
+        resp
       end
     end
 
     def self.attach_signature(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "abi.attach_signature", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfAttachSignature.new(
-              message: resp.result["message"],
-              message_id: resp.result["message_id"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "abi.attach_signature", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfAttachSignature.new(
+            message: resp.result["message"],
+            message_id: resp.result["message_id"])
+        )
+      else
+        resp
       end
     end
 
     def self.decode_message(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "abi.decode_message", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: DecodedMessageBody.from_json(resp.result)
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "abi.decode_message", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: DecodedMessageBody.from_json(resp.result)
+        )
+      else
+        resp
       end
     end
 
     def self.decode_message_body(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "abi.decode_message_body", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: DecodedMessageBody.from_json(resp.result)
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "abi.decode_message_body", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: DecodedMessageBody.from_json(resp.result)
+        )
+      else
+        resp
       end
     end
 
     def self.encode_account(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "abi.encode_account", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfEncodeAccount.new(
-              account: resp.result["account"],
-              id_: resp.result["id"]
-            )
+      resp = Interop::request_to_native_lib(ctx, "abi.encode_account", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfEncodeAccount.new(
+            account: resp.result["account"],
+            id_: resp.result["id"]
           )
-        else
-          yield resp
-        end
+        )
+      else
+        resp
       end
     end
   end

@@ -290,5 +290,6 @@ describe TonSdk::Crypto do
       expect(@res3.success?).to eq true
       expect("Test Message").to eq Base64.decode64(@res3.result.unsigned)
     end
+
   end
 end

@@ -114,98 +114,90 @@ module TonSdk
     #
 
     def self.parse_message(ctx, params)
-      Interop::request_to_native_lib(ctx, "boc.parse_message", params.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfParse.new(resp.result["parsed"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "boc.parse_message", params.to_h.to_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfParse.new(resp.result["parsed"])
+        )
+      else
+        yield resp
       end
     end
 
     def self.parse_transaction(ctx, params)
-      Interop::request_to_native_lib(ctx, "boc.parse_transaction", params.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfParse.new(resp.result["parsed"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "boc.parse_transaction", params.to_h.to_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfParse.new(resp.result["parsed"])
+        )
+      else
+        yield resp
       end
     end
 
     def self.parse_account(ctx, params)
-      Interop::request_to_native_lib(ctx, "boc.parse_account", params.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfParse.new(resp.result["parsed"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "boc.parse_account", params.to_h.to_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfParse.new(resp.result["parsed"])
+        )
+      else
+        yield resp
       end
     end
 
     def self.parse_block(ctx, params)
-      Interop::request_to_native_lib(ctx, "boc.parse_block", params.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfParse.new(resp.result["parsed"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "boc.parse_block", params.to_h.to_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfParse.new(resp.result["parsed"])
+        )
+      else
+        yield resp
       end
     end
 
     def self.parse_shardstate(ctx, params)
-      Interop::request_to_native_lib(ctx, "boc.parse_shardstate", params.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfParse.new(resp.result["parsed"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "boc.parse_shardstate", params.to_h.to_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfParse.new(resp.result["parsed"])
+        )
+      else
+        resp
       end
     end
 
     def self.get_blockchain_config(ctx, params)
-      Interop::request_to_native_lib(ctx, "boc.get_blockchain_config", params.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfGetBlockchainConfig.new(resp.result["config_boc"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "boc.get_blockchain_config", params.to_h.to_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfGetBlockchainConfig.new(resp.result["config_boc"])
+        )
+      else
+        resp
       end
     end
 
     def self.get_boc_hash(ctx, params)
-      Interop::request_to_native_lib(ctx, "boc.get_boc_hash", params.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfGetBocHash.new(resp.result["hash"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "boc.get_boc_hash", params.to_h.to_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfGetBocHash.new(resp.result["hash"])
+        )
+      else
+        resp
       end
     end
 
     def self.get_code_from_tvc(ctx, params)
-      Interop::request_to_native_lib(ctx, "boc.get_code_from_tvc", params.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfGetCodeFromTvc.new(resp.result["code"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "boc.get_code_from_tvc", params.to_h.to_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfGetCodeFromTvc.new(resp.result["code"])
+        )
+      else
+        resp
       end
     end
   end

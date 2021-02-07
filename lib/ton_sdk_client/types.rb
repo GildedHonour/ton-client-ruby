@@ -18,9 +18,22 @@ module TonSdk
   end
 
   class NativeLibResponsetResult
-    attr_reader :result, :error
+    attr_reader :result, :error, :type_
+    TYPES = [
+      :success,
+      :failure,
+      :request,
+      :notify,
+      :custom
+    ]
 
-    def initialize(result: nil, error: nil)
+    # FIXME remove nil from type
+    def initialize(type_: :success, result: nil, error: nil)
+      unless TYPES.include?(type_)
+        raise ArgumentError.new("type #{type_} is unknown; known types: #{TYPES}")
+      end
+      @type_ = type_
+
       if !result.nil? && !error.nil?
         raise ArgumentError.new('only either argument, result or error, should be specified')
       elsif !result.nil?

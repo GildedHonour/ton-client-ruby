@@ -298,7 +298,7 @@ module TonSdk
         ctx,
         "debot.start",
         params.to_h.to_json,
-        debot_app_response_handler: app_resp_handler,
+        app_obj_handler: app_resp_handler,
         single_thread_only: false
       ) do |resp|
         if resp.success?
@@ -319,7 +319,7 @@ module TonSdk
       # 2) this all can be replaced with 'app_browser_obj.request(...)' and 
       # 'app_browser_obj.notify(...)' calls, possibly
 
-      app_resp_handler = Proc.new do |data|
+      app_obj_handler = Proc.new do |data|
         req_data = data["request_data"]
         case data["type"]
         when "Log"
@@ -394,7 +394,7 @@ module TonSdk
         ctx,
         "debot.fetch",
         params.to_h.to_json,
-        debot_app_response_handler: app_resp_handler,
+        app_obj_handler: app_obj_handler,
         single_thread_only: false
       ) do |resp|
         if resp.success?

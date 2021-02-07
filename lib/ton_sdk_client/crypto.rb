@@ -726,11 +726,7 @@ module TonSdk
         @handle = a
       end
 
-      def to_h
-        {
-          handle: @handle
-        }
-      end
+      def to_h = { handle: @handle }
     end
 
     class ResultOfSigningBoxGetPublicKey
@@ -864,18 +860,21 @@ module TonSdk
     end
 
     def self.generate_random_sign_keys(ctx)
-      Interop::request_to_native_lib(ctx, "crypto.generate_random_sign_keys", "") do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: KeyPair.new(
-              public_: resp.result["public"],
-              secret: resp.result["secret"]
-            )
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.generate_random_sign_keys", "")
+
+          # TODO debug
+          puts "***test1 #{resp.type_}"
+          puts "***test1 #{resp.success?}"
+
+      if resp.type_ == :success
+        {
+          success: KeyPair.new(public_: resp.result["public"], secret: resp.result["secret"]),
+          error: nil
+        }
+      else
+        {success: nil, error: resp}
       end
+
     end
 
     def self.sign(ctx, params)
@@ -1219,15 +1218,55 @@ module TonSdk
       end
     end
 
-    def self.register_signing_box(ctx, params)
-      Interop::request_to_native_lib(ctx, "crypto.register_signing_box", params.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
+    # TODO handle a response with AppSigningBox
+    def self.register_signing_box(ctx)
+
+
+
+      app_obj_handler = Proc.new do |x|
+        params = TonSdk::Client::ParamsOfResolveAppRequest.new(app_request_id: x["app_request_id"], result: x["request_data"])
+        TonSdk::Client.resolve_app_request(@c_ctx.context, params) do |resp|
+          puts "****app_obj_handler resp: #{resp}"
+        end
+      end
+
+
+
+      Interop::request_to_native_lib(
+        ctx,
+        "crypto.register_signing_box",
+        nil,
+        app_obj_handler: app_obj_handler,
+        single_thread_only: false
+
+      ) do |resp|
+        # if resp.success?
+        #   yield NativeLibResponsetResult.new(
+        #     result: RegisteredSigningBox.new(resp.result["handle"])
+        #   )
+        # else
+        #   yield resp
+        # end
+
+        puts "*** crypto > register_signing_box > resp.type_ #{resp.type_}"
+
+        case resp.type_
+        when :success
+           yield NativeLibResponsetResult.new(
             result: RegisteredSigningBox.new(resp.result["handle"])
           )
-        else
+        when :request
+          # TODO
+          :request
+
+        when :notify
+          # TODO
+          :notify
+
+        when :error
           yield resp
-        end
+
+         end
       end
     end
 
@@ -1244,7 +1283,12 @@ module TonSdk
     end
 
     def self.signing_box_get_public_key(ctx, params)
-      Interop::request_to_native_lib(ctx, "crypto.signing_box_get_public_key", params.to_h.to_json) do |resp|
+      Interop::request_to_native_lib(
+        ctx,
+        "crypto.signing_box_get_public_key",
+        params.to_h.to_json,
+        single_thread_only: false
+      ) do |resp|
         if resp.success?
           yield NativeLibResponsetResult.new(
             result: ResultOfSigningBoxGetPublicKey.new(resp.result["pubkey"])

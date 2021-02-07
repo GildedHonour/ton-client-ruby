@@ -128,8 +128,6 @@ module TonSdk
       ctx,
       function_name,
       function_params_json = nil,
-      custom_response_handler: nil,
-      debot_app_response_handler: nil,
       single_thread_only: true
     )
       function_name_tc_str = TcStringData.from_string(function_name)
@@ -163,25 +161,30 @@ module TonSdk
           ''
         end
 
+
+            # todo
+            # puts "\r\n*** #{function_name} > TcResponseCode #{response_type}; #{tc_data_json_content}; is_finished: #{is_finished}"
+
         begin
-          case response_type
+          @ret = case response_type
           when TcResponseCodes::SUCCESS
-            if block_given?
-              yield NativeLibResponsetResult.new(result: tc_data_json_content)
-            end
+            NativeLibResponsetResult.new(type_: :success, result: tc_data_json_content)
   
           when TcResponseCodes::ERROR
-            if block_given?
-              yield NativeLibResponsetResult.new(error: tc_data_json_content)
-            end
+            NativeLibResponsetResult.new(type_: :error, error: tc_data_json_content)
 
           when TcResponseCodes::NOP
             nil
 
-          when TcResponseCodes::APP_REQUEST, TcResponseCodes::APP_NOTIFY
-            if !debot_app_response_handler.nil?
-              debot_app_response_handler.call(tc_data_json_content)
-            end
+
+          # TODO
+          when TcResponseCodes::APP_REQUEST
+            NativeLibResponsetResult.new(type_: :request, result: tc_data_json_content)
+
+
+
+          when TcResponseCodes::APP_NOTIFY
+            NativeLibResponsetResult.new(type_: :notify, result: tc_data_json_content)
 
           # TODO
           # think of a return value, namely, calling a block via 'yield',
@@ -189,13 +192,8 @@ module TonSdk
           # as for the time being, it'll be called with success and "" (empty string) as a value
 
           when TcResponseCodes::CUSTOM
-            if block_given?
-              yield NativeLibResponsetResult.new(result: "")
-            end
+            NativeLibResponsetResult.new(type_: :custom, result: nil)
 
-            if !custom_response_handler.nil?
-              custom_response_handler.call(tc_data_json_content)
-            end
 
           else
             raise ArgumentError.new("unsupported response type: #{response_type}")
@@ -203,6 +201,7 @@ module TonSdk
 
         rescue => e
           logger.error(e)
+          @ret = e
         ensure
           if single_thread_only == true
             sm.release()
@@ -215,12 +214,7 @@ module TonSdk
       end
 
       @@request_counter.increment()
-    end
-
-    def self.request_to_native_lib_sync(ctx, function_name, function_params_json)
-      function_name_tc_str = TcStringData.from_string(function_name)
-      function_params_json_tc_str = TcStringData.from_string(function_params_json)
-      self.tc_request_sync(ctx, function_name_tc_str, function_params_json_tc_str)
+      @ret
     end
   end
 end
