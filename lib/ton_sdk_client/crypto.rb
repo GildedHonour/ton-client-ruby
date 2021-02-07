@@ -796,543 +796,497 @@ module TonSdk
 
     def self.factorize(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.factorize", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfFactorize.new(resp.result["factors"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.factorize", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfFactorize.new(resp.result["factors"])
+        )
+      else
+        resp
       end
     end
 
     def self.modular_power(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.modular_power", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfModularPower.new(resp.result["modular_power"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.modular_power", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfModularPower.new(resp.result["modular_power"])
+        )
+      else
+        resp
       end
     end
 
     def self.ton_crc16(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.ton_crc16", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfTonCrc16.new(resp.result["crc"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.ton_crc16", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfTonCrc16.new(resp.result["crc"])
+        )
+      else
+        resp
       end
     end
 
     def self.generate_random_bytes(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.generate_random_bytes", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfGenerateRandomBytes.new(resp.result["bytes"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.generate_random_bytes", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfGenerateRandomBytes.new(resp.result["bytes"])
+        )
+      else
+        resp
       end
     end
 
     def self.convert_public_key_to_ton_safe_format(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.convert_public_key_to_ton_safe_format", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfConvertPublicKeyToTonSafeFormat.new(resp.result["ton_public_key"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.convert_public_key_to_ton_safe_format", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfConvertPublicKeyToTonSafeFormat.new(resp.result["ton_public_key"])
+        )
+      else
+        resp
       end
     end
 
     def self.generate_random_sign_keys(ctx)
       resp = Interop::request_to_native_lib(ctx, "crypto.generate_random_sign_keys", "")
-
-          # TODO debug
-          puts "***test1 #{resp.type_}"
-          puts "***test1 #{resp.success?}"
-
-      if resp.type_ == :success
-        {
-          success: KeyPair.new(public_: resp.result["public"], secret: resp.result["secret"]),
-          error: nil
-        }
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: KeyPair.new(public_: resp.result["public"], secret: resp.result["secret"])
+        )
       else
-        {success: nil, error: resp}
+        resp
       end
-
     end
 
     def self.sign(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.sign", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfSign.new(
-              signed: resp.result["signed"],
+      resp = Interop::request_to_native_lib(ctx, "crypto.sign", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfSign.new(
+            signed: resp.result["signed"],
               signature: resp.result["signature"]
             )
           )
-        else
-          yield resp
-        end
+      else
+        resp
       end
     end
 
     def self.verify_signature(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.verify_signature", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfVerifySignature.new(resp.result["unsigned"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.verify_signature", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfVerifySignature.new(resp.result["unsigned"])
+        )
+      else
+        resp
       end
     end
 
     def self.sha256(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.sha256", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfHash.new(resp.result["hash"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.sha256", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfHash.new(resp.result["hash"])
+        )
+      else
+        resp
       end
     end
 
     def self.sha512(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.sha512", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfHash.new(resp.result["hash"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.sha512", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfHash.new(resp.result["hash"])
+        )
+      else
+        resp
       end
     end
 
     def self.scrypt(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.scrypt", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfScrypt.new(resp.result["key"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.scrypt", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfScrypt.new(resp.result["key"])
+        )
+      else
+        resp
       end
     end
 
     def self.nacl_sign_keypair_from_secret_key(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.nacl_sign_keypair_from_secret_key", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: KeyPair.new(public_: resp.result["public"], secret: resp.result["secret"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.nacl_sign_keypair_from_secret_key", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: KeyPair.new(public_: resp.result["public"], secret: resp.result["secret"])
+        )
+      else
+        resp
       end
     end
 
     def self.nacl_sign(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.nacl_sign", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfNaclSign.new(resp.result["signed"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.nacl_sign", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfNaclSign.new(resp.result["signed"])
+        )
+      else
+        resp
       end
     end
 
     def self.nacl_sign_open(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.nacl_sign_open", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfNaclSignOpen.new(resp.result["unsigned"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.nacl_sign_open", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfNaclSignOpen.new(resp.result["unsigned"])
+        )
+      else
+        resp
       end
     end
 
     def self.nacl_sign_detached(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.nacl_sign_detached", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfNaclSignDetached.new(resp.result["signature"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.nacl_sign_detached", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfNaclSignDetached.new(resp.result["signature"])
+        )
+      else
+        resp
       end
     end
 
     def self.nacl_box_keypair(ctx)
-      Interop::request_to_native_lib(ctx, "crypto.nacl_box_keypair", "") do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: KeyPair.new(public_: resp.result["public"], secret: resp.result["secret"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.nacl_box_keypair", "")
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: KeyPair.new(public_: resp.result["public"], secret: resp.result["secret"])
+        )
+      else
+        resp
       end
     end
 
     def self.nacl_box_keypair_from_secret_key(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.nacl_box_keypair_from_secret_key", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: KeyPair.new(public_: resp.result["public"], secret: resp.result["secret"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.nacl_box_keypair_from_secret_key", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: KeyPair.new(public_: resp.result["public"], secret: resp.result["secret"])
+        )
+      else
+        resp
       end
     end
 
     def self.nacl_box(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.nacl_box", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfNaclBox.new(resp.result["encrypted"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.nacl_box", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfNaclBox.new(resp.result["encrypted"])
+        )
+      else
+        resp
       end
     end
 
     def self.nacl_box_open(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.nacl_box_open", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfNaclBoxOpen.new(resp.result["decrypted"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.nacl_box_open", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfNaclBoxOpen.new(resp.result["decrypted"])
+        )
+      else
+        resp
       end
     end
 
     def self.nacl_secret_box(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.nacl_secret_box", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfNaclBox.new(resp.result["encrypted"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.nacl_secret_box", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfNaclBox.new(resp.result["encrypted"])
+        )
+      else
+        resp
       end
     end
 
     def self.nacl_secret_box_open(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.nacl_secret_box_open", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfNaclBoxOpen.new(resp.result["decrypted"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.nacl_secret_box_open", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfNaclBoxOpen.new(resp.result["decrypted"])
+        )
+      else
+        resp
       end
     end
 
     def self.mnemonic_words(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.mnemonic_words", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfMnemonicWords.new(resp.result["words"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.mnemonic_words", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfMnemonicWords.new(resp.result["words"])
+        )
+      else
+        resp
       end
     end
 
     def self.mnemonic_from_random(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.mnemonic_from_random", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfMnemonicFromRandom.new(resp.result["phrase"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.mnemonic_from_random", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfMnemonicFromRandom.new(resp.result["phrase"])
+        )
+      else
+        resp
       end
     end
 
     def self.mnemonic_from_entropy(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.mnemonic_from_entropy", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfMnemonicFromEntropy.new(resp.result["phrase"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.mnemonic_from_entropy", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfMnemonicFromEntropy.new(resp.result["phrase"])
+        )
+      else
+        resp
       end
     end
 
     def self.mnemonic_verify(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.mnemonic_verify", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfMnemonicVerify.new(resp.result["valid"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.mnemonic_verify", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfMnemonicVerify.new(resp.result["valid"])
+        )
+      else
+        resp
       end
     end
 
 
     def self.mnemonic_derive_sign_keys(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.mnemonic_derive_sign_keys", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: KeyPair.new(public_: resp.result["public"], secret: resp.result["secret"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.mnemonic_derive_sign_keys", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: KeyPair.new(public_: resp.result["public"], secret: resp.result["secret"])
+        )
+      else
+        resp
       end
     end
 
     def self.hdkey_xprv_from_mnemonic(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.hdkey_xprv_from_mnemonic", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfHDKeyXPrvFromMnemonic.new(resp.result["xprv"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.hdkey_xprv_from_mnemonic", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfHDKeyXPrvFromMnemonic.new(resp.result["xprv"])
+        )
+      else
+        resp
       end
     end
 
     def self.hdkey_derive_from_xprv(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.hdkey_derive_from_xprv", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfHDKeyDeriveFromXPrv.new(resp.result["xprv"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.hdkey_derive_from_xprv", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfHDKeyDeriveFromXPrv.new(resp.result["xprv"])
+        )
+      else
+        resp
       end
     end
 
     def self.hdkey_derive_from_xprv_path(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.hdkey_derive_from_xprv_path", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfHDKeyDeriveFromXPrvPath.new(resp.result["xprv"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.hdkey_derive_from_xprv_path", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfHDKeyDeriveFromXPrvPath.new(resp.result["xprv"])
+        )
+      else
+        resp
       end
     end
 
     def self.hdkey_secret_from_xprv(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.hdkey_secret_from_xprv", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfHDKeySecretFromXPrv.new(resp.result["secret"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.hdkey_secret_from_xprv", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfHDKeySecretFromXPrv.new(resp.result["secret"])
+        )
+      else
+        resp
       end
     end
 
     def self.hdkey_public_from_xprv(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.hdkey_public_from_xprv", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfHDKeyPublicFromXPrv.new(resp.result["public"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.hdkey_public_from_xprv", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfHDKeyPublicFromXPrv.new(resp.result["public"])
+        )
+      else
+        resp
       end
     end
 
     def self.chacha20(ctx, params)
       pr_json = params.to_h.to_json
-      Interop::request_to_native_lib(ctx, "crypto.chacha20", pr_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfChaCha20.new(resp.result["data"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.chacha20", pr_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfChaCha20.new(resp.result["data"])
+        )
+      else
+        resp
       end
     end
 
-    # TODO handle a response with AppSigningBox
-    def self.register_signing_box(ctx)
+    # # TODO handle a response with AppSigningBox
+    # def self.register_signing_box(ctx)
 
 
 
-      app_obj_handler = Proc.new do |x|
-        params = TonSdk::Client::ParamsOfResolveAppRequest.new(app_request_id: x["app_request_id"], result: x["request_data"])
-        TonSdk::Client.resolve_app_request(@c_ctx.context, params) do |resp|
-          puts "****app_obj_handler resp: #{resp}"
-        end
-      end
+    #   app_obj_handler = Proc.new do |x|
+    #     params = TonSdk::Client::ParamsOfResolveAppRequest.new(app_request_id: x["app_request_id"], result: x["request_data"])
+    #     resp = TonSdk::Client.resolve_app_request(@c_ctx.context, params)
+    #       puts "****app_obj_handler resp: #{resp}"
+    #     end
+    #   end
 
 
 
-      Interop::request_to_native_lib(
-        ctx,
-        "crypto.register_signing_box",
-        nil,
-        app_obj_handler: app_obj_handler,
-        single_thread_only: false
+    #   Interop::request_to_native_lib(
+    #     ctx,
+    #     "crypto.register_signing_box",
+    #     nil,
+    #     app_obj_handler: app_obj_handler,
+    #     single_thread_only: false)
 
-      ) do |resp|
-        # if resp.success?
-        #   yield NativeLibResponsetResult.new(
-        #     result: RegisteredSigningBox.new(resp.result["handle"])
-        #   )
-        # else
-        #   yield resp
-        # end
+    #   resp = )
+    #     #if resp.success?
+    #     # NativeLibResponsetResult.new(
+    #     #     result: RegisteredSigningBox.new(resp.result["handle"])
+    #     #   )
+    #     # else
+    #     #   resp
+    #     # end
+    #     puts "*** crypto > register_signing_box > resp.type_ #{resp.type_}"
 
-        puts "*** crypto > register_signing_box > resp.type_ #{resp.type_}"
+    #     case resp.type_
+    #     hen :success
+    #       NativeLibResponsetResult.new(
+    #       result: RegisteredSigningBox.new(resp.result["handle"])
+    #               when :request
+    #       # TODO
+    #       :request
 
-        case resp.type_
-        when :success
-           yield NativeLibResponsetResult.new(
-            result: RegisteredSigningBox.new(resp.result["handle"])
-          )
-        when :request
-          # TODO
-          :request
+    #     when :notify
+    #       # TODO
+    #       :notify
 
-        when :notify
-          # TODO
-          :notify
+    #     when :error
+    #       resp
 
-        when :error
-          yield resp
-
-         end
-      end
-    end
+    #   end
+    # end
 
     def self.get_signing_box(ctx, params)
-      Interop::request_to_native_lib(ctx, "crypto.get_signing_box", params.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: RegisteredSigningBox.new(resp.result["handle"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.get_signing_box", params.to_h.to_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: RegisteredSigningBox.new(resp.result["handle"])
+        )
+      else
+        resp
       end
     end
 
     def self.signing_box_get_public_key(ctx, params)
-      Interop::request_to_native_lib(
+      resp = Interop::request_to_native_lib(
         ctx,
         "crypto.signing_box_get_public_key",
         params.to_h.to_json,
         single_thread_only: false
-      ) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfSigningBoxGetPublicKey.new(resp.result["pubkey"])
-          )
-        else
-          yield resp
-        end
+      )
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfSigningBoxGetPublicKey.new(resp.result["pubkey"])
+        )
+      else
+        resp
       end
     end
 
 
     def self.signing_box_sign(ctx, params)
-      Interop::request_to_native_lib(ctx, "crypto.signing_box_sign", params.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfSigningBoxSign.new(resp.result["signature"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.signing_box_sign", params.to_h.to_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfSigningBoxSign.new(resp.result["signature"])
+        )
+      else
+        resp
       end
     end
 
     def self.remove_signing_box(ctx, params)
-      Interop::request_to_native_lib(ctx, "crypto.remove_signing_box", params.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfSigningBoxSign.new(resp.result["signature"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.remove_signing_box", params.to_h.to_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfSigningBoxSign.new(resp.result["signature"])
+        )
+      else
+        resp
       end
     end
 
     def self.nacl_sign_detached_verify(ctx, params)
-      Interop::request_to_native_lib(ctx, "crypto.nacl_sign_detached_verify", params.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfNaclSignDetachedVerify.new(resp.result["succeeded"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "crypto.nacl_sign_detached_verify", params.to_h.to_json)
+      if resp.success?
+        NativeLibResponsetResult.new(
+          result: ResultOfNaclSignDetachedVerify.new(resp.result["succeeded"])
+        )
+      else
+        resp
       end
     end
   end

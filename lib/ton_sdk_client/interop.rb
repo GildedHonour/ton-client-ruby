@@ -140,6 +140,10 @@ module TonSdk
       end
 
 
+              # todo debug
+              # puts "\r\n*** #{function_name}"
+
+
       # using @@request_counter here to pass a @@request_counter and handlers and then retrieve them
       # is probably isn't needed.
       # Thanks to the way Ruby is, the same affect can be achived by a block which is an easier way.
@@ -162,8 +166,10 @@ module TonSdk
         end
 
 
-            # todo
-            # puts "\r\n*** #{function_name} > TcResponseCode #{response_type}; #{tc_data_json_content}; is_finished: #{is_finished}"
+              # todo debug
+              # puts "\r\n*** #{function_name} > TcResponseCode #{response_type}; #{tc_data_json_content}; is_finished: #{is_finished}"
+
+
 
         begin
           @ret = case response_type
@@ -176,24 +182,14 @@ module TonSdk
           when TcResponseCodes::NOP
             nil
 
-
-          # TODO
           when TcResponseCodes::APP_REQUEST
             NativeLibResponsetResult.new(type_: :request, result: tc_data_json_content)
-
-
 
           when TcResponseCodes::APP_NOTIFY
             NativeLibResponsetResult.new(type_: :notify, result: tc_data_json_content)
 
-          # TODO
-          # think of a return value, namely, calling a block via 'yield',
-          # for the cases when response_type isn't equal to 'SUCCESS' or 'ERROR';
-          # as for the time being, it'll be called with success and "" (empty string) as a value
-
           when TcResponseCodes::CUSTOM
             NativeLibResponsetResult.new(type_: :custom, result: nil)
-
 
           else
             raise ArgumentError.new("unsupported response type: #{response_type}")

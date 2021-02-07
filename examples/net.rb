@@ -6,10 +6,9 @@ p1 = TonSdk::Net::ParamsOfQueryCollection.new(
   result: "id",
   limit: 1
 )
-TonSdk::Net.query_collection(@c_ctx.context, p1) do |res|
-  if res.success?
-    puts "net_query_collection#1: #{res.result.result}\r\n\r\n"
-  end
+res = TonSdk::Net.query_collection(@c_ctx.context, p1)
+if res.success?
+  puts "net_query_collection#1: #{res.result.result}\r\n\r\n"
 end
 
 
@@ -27,12 +26,11 @@ p2 = TonSdk::Net::ParamsOfQueryCollection.new(
   result: "id balance"
 )
 
-TonSdk::Net.query_collection(@c_ctx.context, p2) do |res|
-  if res.success?
-    puts "net_query_collection#2: #{res.result.result}\r\n\r\n"
-  else
-    puts "error: #{res.error}"
-  end
+res = TonSdk::Net.query_collection(@c_ctx.context, p2)
+if res.success?
+  puts "net_query_collection#2: #{res.result.result}\r\n\r\n"
+else
+  puts "error: #{res.error}"
 end
 
 
@@ -40,10 +38,9 @@ p3 = TonSdk::Net::ParamsOfQueryCollection.new(
   collection: "accounts", 
   result: "id balance",
 )
-TonSdk::Net.query_collection(@c_ctx.context, p3) do |res|
-  if res.success?
-    puts "net_query_collection#3: #{res.result.result}\r\n\r\n"
-  end
+res = TonSdk::Net.query_collection(@c_ctx.context, p3)
+if res.success?
+  puts "net_query_collection#3: #{res.result.result}\r\n\r\n"
 end
 
 
@@ -52,10 +49,9 @@ p4 = TonSdk::Net::ParamsOfWaitForCollection.new(
   result: "id now",
 )
 
-TonSdk::Net.wait_for_collection(@c_ctx.context, p4) do |res|
-  if res.success?
-    puts "net_wait_for_collection: #{res.result.result}\r\n\r\n"
-  end
+res = TonSdk::Net.wait_for_collection(@c_ctx.context, p4)
+if res.success?
+  puts "net_wait_for_collection: #{res.result.result}\r\n\r\n"
 end
 
 
@@ -69,12 +65,11 @@ response_callback = Proc.new do |a|
 end
 
 Thread.new do
-  TonSdk::Net.subscribe_collection(@c_ctx.context, p5, response_callback) do |res|
-    if res.success?
-      puts "net_subscribe_collection: #{res.result.handle}"
-    else
-      puts "error #{res.error}"
-    end
+  res = TonSdk::Net.subscribe_collection(@c_ctx.context, p5, response_callback)
+  if res.success?
+    puts "net_subscribe_collection: #{res.result.handle}"
+  else
+    puts "error #{res.error}"
   end
 end
 

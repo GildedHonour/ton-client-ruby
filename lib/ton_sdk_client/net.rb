@@ -267,159 +267,123 @@ module TonSdk
     #
 
     def self.query_collection(ctx, params)
-      Interop::request_to_native_lib(
+      resp = Interop::request_to_native_lib(
         ctx,
         "net.query_collection",
         params.to_h.to_json,
         single_thread_only: false
-      ) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfQueryCollection.new(resp.result["result"])
-          )
-        else
-          yield resp
-        end
+      )
+      if resp.success?
+        yield NativeLibResponsetResult.new(
+          result: ResultOfQueryCollection.new(resp.result["result"])
+        )
+      else
+        resp
       end
     end
 
     def self.wait_for_collection(ctx, params)
-      Interop::request_to_native_lib(
+      resp = Interop::request_to_native_lib(
         ctx,
         "net.wait_for_collection",
         params.to_h.to_json,
         single_thread_only: false
-      ) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfWaitForCollection.new(resp.result["result"])
-          )
-        else
-          yield resp
-        end
+      )
+      if resp.success?
+        yield NativeLibResponsetResult.new(
+          result: ResultOfWaitForCollection.new(resp.result["result"])
+        )
+      else
+        resp
       end
     end
 
     def self.unsubscribe(ctx, params)
-      Interop::request_to_native_lib(ctx, "net.unsubscribe", params.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ""
-          )
-        else
-          yield resp
-        end
-      end
+      Interop::request_to_native_lib(ctx, "net.unsubscribe", params.to_h.to_json)
     end
 
     def self.subscribe_collection(ctx, params, custom_response_handler = nil, &block)
-      Interop::request_to_native_lib(
+      resp = Interop::request_to_native_lib(
         ctx,
         "net.subscribe_collection",
         params.to_h.to_json,
         custom_response_handler: custom_response_handler,
         single_thread_only: false
-      ) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfSubscribeCollection.new(resp.result["handle"])
-          )
-        else
-          yield resp
-        end
+      )
+      if resp.success?
+        yield NativeLibResponsetResult.new(
+          result: ResultOfSubscribeCollection.new(resp.result["handle"])
+        )
+      else
+        resp
       end
     end
 
     def self.query(ctx, params)
-      Interop::request_to_native_lib(ctx, "net.query", params.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfQuery.new(resp.result["result"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "net.query", params.to_h.to_json)
+      if resp.success?
+        yield NativeLibResponsetResult.new(
+          result: ResultOfQuery.new(resp.result["result"])
+        )
+      else
+        resp
       end
     end
 
     def self.suspend(ctx)
-      Interop::request_to_native_lib(ctx, "net.suspend", "") do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(result: "")
-        else
-          yield resp
-        end
-      end
+      Interop::request_to_native_lib(ctx, "net.suspend", "")
     end
 
     def self.resume(ctx)
-      Interop::request_to_native_lib(ctx, "net.resume", "") do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(result: "")
-        else
-          yield resp
-        end
-      end
+      Interop::request_to_native_lib(ctx, "net.resume", "")
     end
 
     def self.find_last_shard_block(ctx, params)
-      Interop::request_to_native_lib(ctx, "net.find_last_shard_block", params.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: ResultOfFindLastShardBlock.new(resp.result["block_id"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "net.find_last_shard_block", params.to_h.to_json)
+      if resp.success?
+        yield NativeLibResponsetResult.new(
+          result: ResultOfFindLastShardBlock.new(resp.result["block_id"])
+        )
+      else
+        resp
       end
     end
 
     def self.fetch_endpoints(ctx)
-      Interop::request_to_native_lib(ctx, "net.fetch_endpoints", nil) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: EndpointsSet.new(resp.result["endpoints"])
-          )
-        else
-          yield resp
-        end
+      resp = Interop::request_to_native_lib(ctx, "net.fetch_endpoints", nil)
+      if resp.success?
+        yield NativeLibResponsetResult.new(
+          result: EndpointsSet.new(resp.result["endpoints"])
+        )
+      else
+        resp
       end
     end
 
     def self.set_endpoints(ctx, params)
-      Interop::request_to_native_lib(ctx, "net.set_endpoints", params.to_h.to_json) do |resp|
-        if resp.success?
-          yield NativeLibResponsetResult.new(
-            result: nil
-          )
-        else
-          yield resp
-        end
-      end
+      Interop::request_to_native_lib(ctx, "net.set_endpoints", params.to_h.to_json)
     end
   end
 
   def self.batch_query(ctx, params)
-    Interop::request_to_native_lib(ctx, "net.batch_query", params.to_h.to_json) do |resp|
-      if resp.success?
-        yield NativeLibResponsetResult.new(
-          result: ResultOfBatchQuery.new(resp.result["results"])
-        )
-      else
-        yield resp
-      end
+    resp = Interop::request_to_native_lib(ctx, "net.batch_query", params.to_h.to_json)
+    if resp.success?
+      yield NativeLibResponsetResult.new(
+        result: ResultOfBatchQuery.new(resp.result["results"])
+      )
+    else
+      resp
     end
   end
 
   def self.aggregate_collection(ctx, params)
-    Interop::request_to_native_lib(ctx, "net.aggregate_collection", params.to_h.to_json) do |resp|
-      if resp.success?
-        yield NativeLibResponsetResult.new(
-          result: ResultOfAggregateCollection.new(resp.result["values"])
-        )
-      else
-        yield resp
-      end
+    resp = Interop::request_to_native_lib(ctx, "net.aggregate_collection", params.to_h.to_json)
+    if resp.success?
+      yield NativeLibResponsetResult.new(
+        result: ResultOfAggregateCollection.new(resp.result["values"])
+      )
+    else
+      resp
     end
   end
 end

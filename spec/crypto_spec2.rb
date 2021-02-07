@@ -29,11 +29,10 @@ describe TonSdk::Crypto do
       end
 
       # 1
-      TonSdk::Crypto.generate_random_sign_keys(@c_ctx.context) { |a| @res = a }
-      # expect(@res.success?).to eq true
-      # expect(@res.result.public_.length).to eq 64
-      # expect(@res.result.secret.length).to eq 64
-
+      @res = TonSdk::Crypto.generate_random_sign_keys(@c_ctx.context)
+      expect(@res.success?).to eq true
+      expect(@res.result.public_.length).to eq 64
+      expect(@res.result.secret.length).to eq 64
 
       # # 2
       # pr2 = RegisterSigningBoxParamsMock.new(

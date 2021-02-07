@@ -59,19 +59,17 @@ cfg = TonSdk::ClientConfig.new(
 c_ctx = TonSdk::ClientContext.new(cfg.to_h.to_json)
 
 # next, call a method of a module you want passing a context to it
-TonSdk::Client.version(c_ctx.context) do |res|
+res = TonSdk::Client.version(c_ctx.context)
 
-  # 'res' is of type TonSdk::NativeLibResponsetResult
-  # holds either 'result' or 'error'
-  # to check which one it is, use boolean methods:
-  # res.success? or res.failure?
+# 'res' is of type TonSdk::NativeLibResponsetResult
+# holds either 'result' or 'error'
+# to check which one it is, use boolean methods:
+# res.success? or res.failure?
 
-  if res.success?
-    puts "client_version: #{res.result.version}"
-  else
-    puts "client_version error: #{res.error}"
-  end
-
+if res.success?
+  puts "client_version: #{res.result.version}"
+else
+  puts "client_version error: #{res.error}"
 end
 ```
 
@@ -91,9 +89,8 @@ Note that some methods, such some of the `Processing`, `Net`, `Tvm` modules, wil
     send_events: true
   )
 
-  TonSdk::Processing.process_message(@c_ctx.context, pr1, my_callback) do |a|
-    # [.......]
-  end
+  res = TonSdk::Processing.process_message(@c_ctx.context, pr1, my_callback)
+  # [.......]
 
 ```
 
@@ -195,8 +192,6 @@ factorize
 
 
 ## Notes
-  * Rspec validators or matchers don't work in a block of a non main thread, therefore in the tests an intermediate variable is used to save a result, a block, and then validate it outside of a block.
-
   * Testing asyncronous code in Ruby is difficult and can incur hacks. Not all asyncronous code should be tested automatically via Rspec or other libraries, some should be instead tested manually once and then left alone thereafter:
   https://www.mikeperham.com/2015/12/14/how-to-test-multithreaded-code
 
