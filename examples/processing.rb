@@ -42,7 +42,7 @@ pr1 = TonSdk::Processing::ParamsOfProcessMessage.new(
 )
 
 res = TonSdk::Processing.process_message(@c_ctx.context, pr1, cb)
-puts res
+p res
 
 # required, to keep the main thread alive
 loop do

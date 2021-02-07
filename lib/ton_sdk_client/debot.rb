@@ -308,7 +308,6 @@ module TonSdk
       else
         resp
       end
-      end
     end
 
     def self.fetch(ctx, params, app_browser_obj)

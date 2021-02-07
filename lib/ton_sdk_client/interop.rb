@@ -128,7 +128,10 @@ module TonSdk
       ctx,
       function_name,
       function_params_json = nil,
-      single_thread_only: true
+      single_thread_only: true,
+
+      custom_response_handler: nil
+
     )
       function_name_tc_str = TcStringData.from_string(function_name)
       function_params_json_str = function_params_json || ""
@@ -167,7 +170,7 @@ module TonSdk
 
 
               # todo debug
-              # puts "\r\n*** #{function_name} > TcResponseCode #{response_type}; #{tc_data_json_content}; is_finished: #{is_finished}"
+              # puts "\r\n***Interop > #{function_name} > TcResponseCode #{response_type}; #{tc_data_json_content}; is_finished: #{is_finished}"
 
 
 
@@ -179,17 +182,21 @@ module TonSdk
           when TcResponseCodes::ERROR
             NativeLibResponsetResult.new(type_: :error, error: tc_data_json_content)
 
-          when TcResponseCodes::NOP
-            nil
-
           when TcResponseCodes::APP_REQUEST
             NativeLibResponsetResult.new(type_: :request, result: tc_data_json_content)
 
           when TcResponseCodes::APP_NOTIFY
             NativeLibResponsetResult.new(type_: :notify, result: tc_data_json_content)
 
+          when TcResponseCodes::NOP
+            nil
+
           when TcResponseCodes::CUSTOM
-            NativeLibResponsetResult.new(type_: :custom, result: tc_data_json_content)
+            if !custom_response_handler.nil?
+              custom_response_handler.call(tc_data_json_content)
+            end
+
+            nil
 
           else
             raise ArgumentError.new("unsupported response type: #{response_type}")

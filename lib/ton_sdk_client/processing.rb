@@ -234,7 +234,7 @@ module TonSdk
         ctx,
         "processing.process_message",
         params.to_h.to_json,
-        # custom_response_handler: custom_response_handler,
+        custom_response_handler: custom_response_handler,
         single_thread_only: false
       )
 
@@ -248,10 +248,6 @@ module TonSdk
             fees: resp.result["fees"]
           )
         )
-
-      when :custom
-        custom_response_handler.call(resp)
-
       else
         resp
       end
