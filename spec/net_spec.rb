@@ -6,7 +6,7 @@ describe TonSdk::Net do
       pr1 = TonSdk::Net::ParamsOfQuery.new(
         query: "query{info{version}}"
       )
-      TonSdk::Net.query(@c_ctx.context, pr1) { |a| @res = a }
+      @res = TonSdk::Net.query(@c_ctx.context, pr1)
       timeout_at = get_timeout_for_async_operation()
       is_next_iter = @res.nil?
       while is_next_iter
@@ -26,7 +26,7 @@ describe TonSdk::Net do
       pr1 = TonSdk::Net::ParamsOfFindLastShardBlock.new(
         GIVER_ADDRESS
       )
-      TonSdk::Net.find_last_shard_block(@c_ctx.context, pr1) { |a| @res = a }
+      @res = TonSdk::Net.find_last_shard_block(@c_ctx.context, pr1)
       timeout_at = get_timeout_for_async_operation()
       is_next_iter = @res.nil?
       while is_next_iter
@@ -49,8 +49,7 @@ describe TonSdk::Net do
         result: "id",
         limit: 1
       )
-      TonSdk::Net.query_collection(@c_ctx.context, pr1) { |a| @res1 = a }
-
+      @res1 = TonSdk::Net.query_collection(@c_ctx.context, pr1)
       timeout_at = get_timeout_for_async_operation()
       is_next_iter = @res1.nil?
       while is_next_iter
@@ -69,7 +68,7 @@ describe TonSdk::Net do
         collection: "accounts",
         result: "id balance",
       )
-      TonSdk::Net.query_collection(@c_ctx.context, pr2) { |a| @res2 = a }
+      @res2 = TonSdk::Net.query_collection(@c_ctx.context, pr2)
       timeout_at = get_timeout_for_async_operation()
       is_next_iter = @res2.nil?
       while is_next_iter
@@ -92,7 +91,7 @@ describe TonSdk::Net do
         },
         result: "body created_at"
       )
-      TonSdk::Net.query_collection(@c_ctx.context, pr3) { |a| @res3 = a }
+      @res3 = TonSdk::Net.query_collection(@c_ctx.context, pr3)
       timeout_at = get_timeout_for_async_operation()
       is_next_iter = @res3.nil?
       while is_next_iter
@@ -117,7 +116,7 @@ describe TonSdk::Net do
         result: "id now"
       )
 
-      TonSdk::Net.wait_for_collection(@c_ctx.context, pr1) { |a| @res = a }
+      @res = TonSdk::Net.wait_for_collection(@c_ctx.context, pr1)
       timeout_at = get_timeout_for_async_operation()
       is_next_iter = @res.nil?
       while is_next_iter
@@ -144,8 +143,7 @@ describe TonSdk::Net do
         result: "id"
       )
 
-      TonSdk::Net.subscribe_collection(@c_ctx.context, pr1, cb) { |a| @res = a }
-
+      @res = TonSdk::Net.subscribe_collection(@c_ctx.context, pr1, handler_for_custom_response_type: cb)
       timeout_at = get_timeout_for_async_operation()
       is_next_iter = @res.nil?
       while is_next_iter

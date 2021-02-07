@@ -129,9 +129,7 @@ module TonSdk
       function_name,
       function_params_json = nil,
       single_thread_only: true,
-
-      custom_response_handler: nil
-
+      handler_for_custom_response_type: nil
     )
       function_name_tc_str = TcStringData.from_string(function_name)
       function_params_json_str = function_params_json || ""
@@ -192,8 +190,8 @@ module TonSdk
             nil
 
           when TcResponseCodes::CUSTOM
-            if !custom_response_handler.nil?
-              custom_response_handler.call(tc_data_json_content)
+            if !handler_for_custom_response_type.nil?
+              handler_for_custom_response_type.call(tc_data_json_content)
             end
 
             nil
