@@ -7,7 +7,7 @@ pr1 = TonSdk::Tvm::ParamsOfRunGet.new(
   function_name: "participant_list"
 )
 
-res = TonSdk::Tvm.run_get(@c_ctx.context, pr1)
+res = TonSdk::Tvm.run_get(@c_ctx.context, pr1, is_single_thread_only: true)
 unless res.nil?
   if res.success?
     puts "success1 #{res.result}"

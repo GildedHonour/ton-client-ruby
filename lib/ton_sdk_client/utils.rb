@@ -66,7 +66,7 @@ module TonSdk
       if resp.success?
         NativeLibResponsetResult.new(
           result: Utils::ResultOfConvertAddress.new(resp.result["address"])
-        )
+      )
       else
         resp
       end

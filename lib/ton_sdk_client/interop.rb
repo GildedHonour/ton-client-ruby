@@ -157,10 +157,6 @@ module TonSdk
       # in order to keep a server happy,
       # because otherwise a server will, probably, reply in a wrong way.
 
-      # @client_callback_copy = client_callback
-      # @client_callback_copy = client_callback
-      # @handler_for_app_notify_copy = handler_for_app_notify
-
       self.tc_request(
         ctx,
         function_name_tc_str,
@@ -172,12 +168,12 @@ module TonSdk
           res = params_json[:content].read_string(params_json[:len])
           JSON.parse(res)
         else
-          ''
+          ""
         end
 
 
-        # todo debug
-        puts "\r\n***Interop > #{function_name} > TcResponseCode #{response_type}; #{tc_data_json_content}; is_finished: #{is_finished}"
+            # todo debug
+            puts "\r\n***Interop > #{function_name} > TcResponseCode #{response_type}; req_id: #{req_id}; #{tc_data_json_content}; is_finished: #{is_finished}"
 
         begin
           @ret = case response_type

@@ -82,13 +82,15 @@ module TonSdk
       end
 
       def to_h
-        {
-          type: Helper.sym_to_capitalized_case_str(@type_),
-
-          # may be either one instead?
-          result: @result,
-          text: @text
+        h1 = {
+          type: Helper.sym_to_capitalized_case_str(@type_)
         }
+
+        if @type_ == :ok
+          h1.merge({result: @result.to_h})
+        elsif @type_ == :error
+          h1.merge({text: @text})
+        end
       end
     end
 
@@ -154,8 +156,13 @@ module TonSdk
       end
     end
 
-    def self.resolve_app_request(ctx, params)
-      Interop::request_to_native_lib(ctx, "client.resolve_app_request", params.to_h.to_json)
+    def self.resolve_app_request(ctx, params, is_single_thread_only: false)
+      Interop::request_to_native_lib(
+        ctx,
+        "client.resolve_app_request",
+        params.to_h.to_json,
+        is_single_thread_only: is_single_thread_only
+      )
     end
   end
 end

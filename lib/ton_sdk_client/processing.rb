@@ -238,8 +238,7 @@ module TonSdk
         is_single_thread_only: is_single_thread_only
       )
 
-      case resp.type_
-      when :success
+      if resp.success?
         NativeLibResponsetResult.new(
           result: ResultOfProcessMessage.new(
             transaction: resp.result["transaction"],

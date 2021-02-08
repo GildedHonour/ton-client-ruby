@@ -789,6 +789,36 @@ module TonSdk
       end
     end
 
+    class ResultOfAppSigningBox
+      TYPES = [
+        :get_public_key,
+        :sign
+      ]
+
+      attr_reader :type_, :public_key, :signature
+
+      def initialize(type_:, public_key: nil, signature: nil)
+        unless TYPES.include?(type_)
+          raise ArgumentError.new("type #{type_} is unknown; known types: #{TYPES}")
+        end
+        @type_ = type_
+        @public_key = public_key
+        @signature = signature
+      end
+
+      def to_h
+        h1 = {
+          type: Helper.sym_to_capitalized_case_str(@type_)
+        }
+
+        if @type_ == :get_public_key
+          h1.merge({public_key: @public_key})
+        elsif @type_ == :sign
+          h1.merge({signature: @signature})
+        end
+      end
+    end
+
 
     #
     # functions
@@ -1186,22 +1216,26 @@ module TonSdk
 
     # # TODO handle a response with AppSigningBox
     def self.register_signing_box(ctx, is_single_thread_only: false)
-
-      @client_callback = Proc.new do |x|
-                
+      client_callback = Proc.new do |x|
+                sleep(0.1)
                 # TODO debug
                 puts "inside crypto > register_signing_box > app_obj_handler > #{x}"
                 puts x
 
         params = TonSdk::Client::ParamsOfResolveAppRequest.new(
           app_request_id: x["app_request_id"],
-          result: TonSdk::Client::AppRequestResult.new(type_: :ok, result: x["request_data"])
+          result: TonSdk::Client::AppRequestResult.new(
+            type_: :ok, 
+            result: Crypto::ResultOfAppSigningBox.new(type_: :get_public_key, public_key: "abcdef")
+            # result: Crypto::ResultOfAppSigningBox.new(type_: :sign, signature: "0123456789abcdef")
+          )
         )
-        p "*** params: #{params}"
 
-        resp = TonSdk::Client.resolve_app_request(ctx, params)
-        puts "****resolve_app_request > response: #{resp}"
+        # p "*** params: app_request_id > #{params.app_request_id}"
+        # p "*** params: #{params.result.result}"
 
+        resp = TonSdk::Client.resolve_app_request(ctx, params, is_single_thread_only: true)
+        p "****resolve_app_request > response: #{resp.result}"
       end
 
 
@@ -1210,7 +1244,7 @@ module TonSdk
         ctx,
         "crypto.register_signing_box",
         nil,
-        client_callback: @client_callback,
+        client_callback: client_callback,
         is_single_thread_only: is_single_thread_only
       )
 

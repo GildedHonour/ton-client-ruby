@@ -61,22 +61,22 @@ pr2 = RegisterSigningBoxParamsMock.new(
 
 # puts "*** original public key: #{@res.result.public_}"
 
+Thread.new do
+  @res2 = TonSdk::Crypto.register_signing_box(@c_ctx.context, is_single_thread_only: true)
+  timeout_at = get_timeout_for_async_operation()
+  sleep(0.1) until @res2 || (get_now_for_async_operation() >= timeout_at)
 
-@res2 = TonSdk::Crypto.register_signing_box(@c_ctx.context, is_single_thread_only: false)
-timeout_at = get_timeout_for_async_operation()
-sleep(0.1) until @res2 || (get_now_for_async_operation() >= timeout_at)
+  # expect(@res2.success?).to eq true
+  sb_handle = @res2.result.handle
+  puts "signinx box handle: #{sb_handle}"
+  # expect(sb_handle).to_not eq nil
 
-# expect(@res2.success?).to eq true
-sb_handle = @res2.result.handle
-puts "signinx box handle: #{sb_handle}"
-# expect(sb_handle).to_not eq nil
-
-
-# # 3
-# pr3 = TonSdk::Crypto::RegisteredSigningBox.new(sb_handle)
-# @res3 = TonSdk::Crypto.signing_box_get_public_key(@c_ctx.context, pr3, is_single_thread_only: false)
-# timeout_at = get_timeout_for_async_operation()
-# sleep(0.1) until @res3 || (get_now_for_async_operation() >= timeout_at)
+  # # 3
+  pr3 = TonSdk::Crypto::RegisteredSigningBox.new(sb_handle)
+  @res3 = TonSdk::Crypto.signing_box_get_public_key(@c_ctx.context, pr3, is_single_thread_only: false)
+  timeout_at = get_timeout_for_async_operation()
+  sleep(0.1) until @res3 || (get_now_for_async_operation() >= timeout_at)
+end
 
 # sleep(5)
 # # expect(@res3.success?).to eq true
@@ -88,4 +88,4 @@ puts "signinx box handle: #{sb_handle}"
 
 
 
-sleep(10)
+sleep(5)

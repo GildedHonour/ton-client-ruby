@@ -41,7 +41,7 @@ pr1 = TonSdk::Processing::ParamsOfProcessMessage.new(
   send_events: true
 )
 
-res = TonSdk::Processing.process_message(@c_ctx.context, pr1, client_callback: callback, is_single_thread_only: true)
+res = TonSdk::Processing.process_message(@c_ctx.context, pr1, client_callback: callback, is_single_thread_only: false)
 p res
 
 # required, to keep the main thread alive
