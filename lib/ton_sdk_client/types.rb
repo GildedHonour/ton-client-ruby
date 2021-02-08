@@ -38,14 +38,12 @@ module TonSdk
         raise ArgumentError.new('only either argument, result or error, should be specified')
       elsif !result.nil?
         @result = result
-      elsif !error.ni?
+      elsif !error.nil?
         @error = SdkError.new(
           code: error["code"],
           message: error["message"],
           data: error["data"]
         )
-      else
-        raise ArgumentError.new('some arguments are wrong; provide either result or error')
       end
 
       self

@@ -89,7 +89,7 @@ Note that some methods, such some of the `Processing`, `Net`, `Tvm` modules, wil
     puts "callback fired: #{a}"
   end
 
-  res = TonSdk::Processing.process_message(@c_ctx.context, params, handler_for_custom_response: callback)
+  res = TonSdk::Processing.process_message(@c_ctx.context, params, client_callback: callback)
   if !res.nil? && res.success?
     # [.......]
 

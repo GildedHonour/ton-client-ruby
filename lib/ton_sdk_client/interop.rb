@@ -7,7 +7,11 @@ module TonSdk
   module Interop
     extend FFI::Library
 
-    logger = Logger.new(STDOUT)
+    class <<self
+      attr_accessor :logger
+    end
+
+    @logger = Logger.new(STDOUT)
 
     class TcStringData < FFI::Struct
       layout :content, :pointer,
@@ -69,6 +73,7 @@ module TonSdk
       APP_REQUEST = 3
       APP_NOTIFY = 4
       CUSTOM = 100
+      MAX = 199
     end
 
 
@@ -152,7 +157,7 @@ module TonSdk
       # in order to keep a server happy,
       # because otherwise a server will, probably, reply in a wrong way.
 
-      # @handler_for_custom_response_copy = handler_for_custom_response
+      # @client_callback_copy = client_callback
       # @client_callback_copy = client_callback
       # @handler_for_app_notify_copy = handler_for_app_notify
 
@@ -174,15 +179,13 @@ module TonSdk
         # todo debug
         puts "\r\n***Interop > #{function_name} > TcResponseCode #{response_type}; #{tc_data_json_content}; is_finished: #{is_finished}"
 
-
-
         begin
           @ret = case response_type
           when TcResponseCodes::SUCCESS
             NativeLibResponsetResult.new(type_: :success, result: tc_data_json_content)
   
           when TcResponseCodes::ERROR
-            NativeLibResponsetResult.new(type_: :error, error: tc_data_json_content)
+            NativeLibResponsetResult.new(type_: :failure, error: tc_data_json_content)
 
           when TcResponseCodes::APP_REQUEST
             unless client_callback.nil?
@@ -197,7 +200,7 @@ module TonSdk
           when TcResponseCodes::NOP
             nil
 
-          when TcResponseCodes::CUSTOM
+          when TcResponseCodes::CUSTOM..TcResponseCodes::MAX
             unless client_callback.nil?
               client_callback.call(tc_data_json_content)
             end
@@ -207,7 +210,7 @@ module TonSdk
           end
 
         rescue => e
-          logger.error(e)
+          @logger.error(e)
           @ret = e
         ensure
           if is_single_thread_only == true
@@ -215,7 +218,6 @@ module TonSdk
           end
         end
       end
-
 
       if is_single_thread_only == true
         @sm.acquire()

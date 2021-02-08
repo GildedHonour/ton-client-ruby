@@ -37,7 +37,7 @@ describe TonSdk::Processing do
         @events.push(a)
       end
 
-      @res2 = TonSdk::Processing::send_message(@c_ctx.context, pr_s2, handler_for_custom_response: callback)
+      @res2 = TonSdk::Processing::send_message(@c_ctx.context, pr_s2, client_callback: callback)
       timeout_at2 = get_timeout_for_async_operation()
       is_next_iter2 = @res2.nil?
       while is_next_iter2
@@ -56,7 +56,7 @@ describe TonSdk::Processing do
         send_events: true
       )
 
-      @res3 = TonSdk::Processing::wait_for_transaction(@c_ctx.context, pr_s3, handler_for_custom_response: callback)
+      @res3 = TonSdk::Processing::wait_for_transaction(@c_ctx.context, pr_s3, client_callback: callback)
       timeout_at3 = get_timeout_for_async_operation()
       is_next_iter3 = @res3.nil?
       while is_next_iter3

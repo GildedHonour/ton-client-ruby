@@ -143,7 +143,7 @@ describe TonSdk::Net do
         result: "id"
       )
 
-      @res = TonSdk::Net.subscribe_collection(@c_ctx.context, pr1, handler_for_custom_response: callback, is_single_thread_only: true)
+      @res = TonSdk::Net.subscribe_collection(@c_ctx.context, pr1, client_callback: callback, is_single_thread_only: true)
       timeout_at = get_timeout_for_async_operation()
       is_next_iter = @res.nil?
       while is_next_iter

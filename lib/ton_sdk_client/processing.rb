@@ -178,16 +178,16 @@ module TonSdk
     # functions
     #
 
-    def self.send_message(ctx, params, handler_for_custom_response: nil, is_single_thread_only: false)
-      if (params.send_events == true) && handler_for_custom_response.nil?
-        raise ArgumentError.new("with `send_events` set to true, `handler_for_custom_response` may not be nil")
+    def self.send_message(ctx, params, client_callback: nil, is_single_thread_only: false)
+      if (params.send_events == true) && client_callback.nil?
+        raise ArgumentError.new("with `send_events` set to true, `client_callback` may not be nil")
       end
 
       resp = Interop::request_to_native_lib(
         ctx,
         "processing.send_message",
         params.to_h.to_json,
-        handler_for_custom_response: handler_for_custom_response,
+        client_callback: client_callback,
         is_single_thread_only: is_single_thread_only
       )
       if resp.success?
@@ -199,16 +199,16 @@ module TonSdk
       end
     end
 
-    def self.wait_for_transaction(ctx, params, handler_for_custom_response: nil, is_single_thread_only: false)
-      if (params.send_events == true) && handler_for_custom_response.nil?
-        raise ArgumentError.new("with `send_events` set to true, `handler_for_custom_response` may not be nil")
+    def self.wait_for_transaction(ctx, params, client_callback: nil, is_single_thread_only: false)
+      if (params.send_events == true) && client_callback.nil?
+        raise ArgumentError.new("with `send_events` set to true, `client_callback` may not be nil")
       end
 
       resp = Interop::request_to_native_lib(
         ctx,
         "processing.wait_for_transaction",
         params.to_h.to_json,
-        handler_for_custom_response: handler_for_custom_response,
+        client_callback: client_callback,
         is_single_thread_only: is_single_thread_only
       )
       if resp.success?
@@ -225,16 +225,16 @@ module TonSdk
       end
     end
 
-    def self.process_message(ctx, params, handler_for_custom_response: nil, is_single_thread_only: false)
-      if (params.send_events == true) && handler_for_custom_response.nil?
-        raise ArgumentError.new("with `send_events` set to true `handler_for_custom_response` may not be nil")
+    def self.process_message(ctx, params, client_callback: nil, is_single_thread_only: false)
+      if (params.send_events == true) && client_callback.nil?
+        raise ArgumentError.new("with `send_events` set to true `client_callback` may not be nil")
       end
 
       resp = Interop::request_to_native_lib(
         ctx,
         "processing.process_message",
         params.to_h.to_json,
-        handler_for_custom_response: handler_for_custom_response,
+        client_callback: client_callback,
         is_single_thread_only: is_single_thread_only
       )
 
