@@ -185,12 +185,12 @@ module TonSdk
 
           when TcResponseCodes::APP_REQUEST
             unless client_callback.nil?
-              client_callback.call(tc_data_json_content)
+              client_callback.call(:request, tc_data_json_content, )
             end
 
           when TcResponseCodes::APP_NOTIFY
             unless client_callback.nil?
-              client_callback.call(tc_data_json_content)
+              client_callback.call(:notify, tc_data_json_content)
             end
 
           when TcResponseCodes::NOP
@@ -198,7 +198,7 @@ module TonSdk
 
           when TcResponseCodes::CUSTOM..TcResponseCodes::MAX
             unless client_callback.nil?
-              client_callback.call(tc_data_json_content)
+              client_callback.call(tc_data_json_content, :custom)
             end
 
           else

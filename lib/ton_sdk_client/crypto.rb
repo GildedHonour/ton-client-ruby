@@ -1215,20 +1215,32 @@ module TonSdk
 
 
     # # TODO handle a response with AppSigningBox
-    def self.register_signing_box(ctx, is_single_thread_only: false)
-      client_callback = Proc.new do |x|
-                sleep(0.1)
+    def self.register_signing_box(ctx, app_obj, is_single_thread_only: false)
+      client_callback = Proc.new do |type_, x|
+
                 # TODO debug
+                puts "***client_callback type_: #{type_}"
                 puts "inside crypto > register_signing_box > app_obj_handler > #{x}"
                 puts x
 
+
+        app_res = app_obj.request(x["request_data"])
+        app_req_result = case app_res
+        in [:success, result]
+          TonSdk::Client::AppRequestResult.new(
+            type_: :ok,
+            result: result
+          )
+        in [:error, text]
+          TonSdk::Client::AppRequestResult.new(
+            type_: :error,
+            text: text
+          )
+        end
+
         params = TonSdk::Client::ParamsOfResolveAppRequest.new(
           app_request_id: x["app_request_id"],
-          result: TonSdk::Client::AppRequestResult.new(
-            type_: :ok, 
-            result: Crypto::ResultOfAppSigningBox.new(type_: :get_public_key, public_key: "abcdef")
-            # result: Crypto::ResultOfAppSigningBox.new(type_: :sign, signature: "0123456789abcdef")
-          )
+          result: app_req_result
         )
 
         # p "*** params: app_request_id > #{params.app_request_id}"
@@ -1251,28 +1263,13 @@ module TonSdk
 
       puts "*** crypto > register_signing_box > resp.type_ #{resp.type_}"
 
-      case resp.type_
-      when :success
+      if resp.success?
         NativeLibResponsetResult.new(
           result: RegisteredSigningBox.new(resp.result["handle"])
         )
-
-      when :request
-        # TODO
-        puts "*** :request"
-        :request
-
-      when :notify
-        # TODO
-
-        puts "*** :notify"
-        :notify
-
-      when :error
+      else
         resp
-
       end
-
     end
 
     def self.get_signing_box(ctx, params)
