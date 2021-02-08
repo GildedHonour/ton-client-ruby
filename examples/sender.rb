@@ -24,63 +24,56 @@ pr_s = TonSdk::Abi::ParamsOfEncodeMessageBody.new(
   signer: TonSdk::Abi::Signer.new(type_: :none)
 )
 
-TonSdk::Abi::encode_message_body(@graphql_c_ctx.context, pr_s) do |res|
+res = TonSdk::Abi::encode_message_body(@graphql_c_ctx.context, pr_s)
+if res.success?
+  cont_json2 = File.read("#{EXAMPLES_DATA_DIR}/contracts/abi_v2/SetcodeMultisigWallet.abi.json")
+  abi2 = TonSdk::Abi::Abi.new(
+    type_: :contract,
+    value: TonSdk::Abi::AbiContract.from_json(JSON.parse(cont_json2))
+  )
+
+  keys = nil
+  res = TonSdk::Crypto::generate_random_sign_keys(@c_ctx.context)
   if res.success?
-    cont_json2 = File.read("#{EXAMPLES_DATA_DIR}/contracts/abi_v2/SetcodeMultisigWallet.abi.json")
-    abi2 = TonSdk::Abi::Abi.new(
-      type_: :contract,
-      value: TonSdk::Abi::AbiContract.from_json(JSON.parse(cont_json2))
-    )
-
-    keys = nil
-    TonSdk::Crypto::generate_random_sign_keys(@c_ctx.context) do |res|
-      if res.success?
-        keys = res.result
-      end
-    end
-    sleep(0.1) until keys
-
-    enc_pr_s = TonSdk::Abi::ParamsOfEncodeMessage.new(
-      abi: abi2,
-      address: GIVER_ADDRESS,
-      # address: WALLET_ADDRESS,
-
-      call_set: TonSdk::Abi::CallSet.new(
-        function_name: "sendTransaction",
-        input: {
-          "dest": WALLET_ADDRESS,
-          # "dest": GIVER_ADDRESS,
-
-          "value": 12345,
-          "bounce": false,
-          "flags": 3,
-          "payload": res.result.body
-        }
-      ),
-      signer: TonSdk::Abi::Signer.new(type_: :keys, keys: keys)
-    )
-
-    pr_s2 = ParamsOfProcessMessage.new(
-      message_encode_params: enc_pr_s,
-
-      # send_events: true
-      send_events: false
-    )
-
-    cb = Proc.new do |a|
-      puts "message: #{a}"
-    end
-
-    TonSdk::Processing::process_message(@graphql_c_ctx.context, pr_s2, cb) do |res2|
-      if res2.success?
-        puts "process_message result: #{res2.result}"
-      else
-        puts "error process_message #{res2.error}"
-      end
-    end
-
-
-  else
-    puts "error encode_message_body #{res.error}"
+    keys = res.result
   end
+  sleep(0.1) until keys
+
+  enc_pr_s = TonSdk::Abi::ParamsOfEncodeMessage.new(
+    abi: abi2,
+    address: GIVER_ADDRESS,
+    # address: WALLET_ADDRESS,
+
+    call_set: TonSdk::Abi::CallSet.new(
+      function_name: "sendTransaction",
+      input: {
+        "dest": WALLET_ADDRESS,
+        # "dest": GIVER_ADDRESS,
+
+        "value": 12345,
+        "bounce": false,
+        "flags": 3,
+        "payload": res.result.body
+      }
+    ),
+    signer: TonSdk::Abi::Signer.new(type_: :keys, keys: keys)
+  )
+
+  pr_s2 = ParamsOfProcessMessage.new(
+    message_encode_params: enc_pr_s,
+    send_events: false
+  )
+
+  callback = Proc.new do |a|
+    puts "message: #{a}"
+  end
+
+  res2 = TonSdk::Processing::process_message(@graphql_c_ctx.context, pr_s2, callback)
+  if res2.success?
+    puts "process_message result: #{res2.result}"
+  else
+    puts "error process_message #{res2.error}"
+  end
+else
+  puts "error encode_message_body #{res.error}"
 end

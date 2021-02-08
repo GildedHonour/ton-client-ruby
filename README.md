@@ -47,6 +47,7 @@ The examples are located in the `examples` directory, and they cover most the mo
 And here's a simple minimalistic one:
 
 ```ruby
+
 require 'ton_sdk_client'
 
 cfg = TonSdk::ClientConfig.new(
@@ -66,7 +67,7 @@ res = TonSdk::Client.version(c_ctx.context)
 # to check which one it is, use boolean methods:
 # res.success? or res.failure?
 
-if res.success?
+if !res.nil? && res.success?
   puts "client_version: #{res.result.version}"
 else
   puts "client_version error: #{res.error}"
@@ -78,19 +79,19 @@ Note that some methods, such some of the `Processing`, `Net`, `Tvm` modules, wil
 
 ```ruby
 
-  my_callback = Proc.new do |a|
-
-    # will be triggered multiple times, asyncronously
-    puts "callback fired: #{a}"
-  end
-
-  pr1 = TonSdk::Processing::ParamsOfProcessMessage.new(
+  params = TonSdk::Processing::ParamsOfProcessMessage.new(
     message_encode_params: encode_params,
     send_events: true
   )
 
-  res = TonSdk::Processing.process_message(@c_ctx.context, pr1, my_callback)
-  # [.......]
+  # will be triggered multiple times, asyncronously
+  callback = Proc.new do |a|
+    puts "callback fired: #{a}"
+  end
+
+  res = TonSdk::Processing.process_message(@c_ctx.context, params, handler_for_custom_response: callback)
+  if !res.nil? && res.success?
+    # [.......]
 
 ```
 
@@ -194,18 +195,6 @@ factorize
 ## Notes
   * Testing asyncronous code in Ruby is difficult and can incur hacks. Not all asyncronous code should be tested automatically via Rspec or other libraries, some should be instead tested manually once and then left alone thereafter:
   https://www.mikeperham.com/2015/12/14/how-to-test-multithreaded-code
-
-  * In some of the tests of the gem a "sleep" loop with a timeout are used to wait for an asyncronous operation to deliver a result, and this approach will do, although it can be replaced with a more idiomatic one. Oweing to the side effects, at times some tests may fail. When it happens, try to increase a timeout:
-
-  ```ruby
-  timeout_at = get_timeout_for_async_operation()
-
-  # before, 5 seconds by default
-  sleep(0.1) until @res || get_now() >= timeout_at
-
-  # after, longer timeout
-  sleep(0.1) until @res || get_now() >= (timeout_at * 2)
-  ```
 
   * No automatic generator has been used to generate Ruby classes or bindings to the SDK. Why not? Because no appropriate, simple and functional one has been found.
 

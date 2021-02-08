@@ -61,11 +61,11 @@ p5 = TonSdk::Net::ParamsOfSubscribeCollection.new(
 )
 
 response_callback = Proc.new do |a|
-  puts "response_callback #{a}"
+  puts "response_callback: #{a}"
 end
 
 Thread.new do
-  res = TonSdk::Net.subscribe_collection(@c_ctx.context, p5, response_callback)
+  res = TonSdk::Net.subscribe_collection(@c_ctx.context, p5, client_callback: response_callback)
   if res.success?
     puts "net_subscribe_collection: #{res.result.handle}"
   else

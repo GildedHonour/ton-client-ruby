@@ -32,8 +32,8 @@ encode_params = TonSdk::Abi::ParamsOfEncodeMessage.new(
   signer: TonSdk::Abi::Signer.new(type_: :keys, keys: @keys)
 )
 
-cb = Proc.new do |a|
-  puts "process_message > event: #{a}"
+callback = Proc.new do |a|
+  puts "process_message > event: \r\n#{a}\r\n\r\n"
 end
 
 pr1 = TonSdk::Processing::ParamsOfProcessMessage.new(
@@ -41,7 +41,7 @@ pr1 = TonSdk::Processing::ParamsOfProcessMessage.new(
   send_events: true
 )
 
-res = TonSdk::Processing.process_message(@c_ctx.context, pr1, cb)
+res = TonSdk::Processing.process_message(@c_ctx.context, pr1, client_callback: callback, is_single_thread_only: true)
 p res
 
 # required, to keep the main thread alive

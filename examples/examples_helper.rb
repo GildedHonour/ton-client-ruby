@@ -1,4 +1,7 @@
 require 'base64'
+require 'concurrent'
+require 'concurrent-edge'
+
 require_relative '../lib/ton_sdk_client.rb'
 
 PRINT_RESULT_MAX_LEN = 500

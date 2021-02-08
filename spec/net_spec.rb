@@ -49,7 +49,7 @@ describe TonSdk::Net do
         result: "id",
         limit: 1
       )
-      @res1 = TonSdk::Net.query_collection(@c_ctx.context, pr1)
+      @res1 = TonSdk::Net.query_collection(@c_ctx.context, pr1, is_single_thread_only: true)
       timeout_at = get_timeout_for_async_operation()
       is_next_iter = @res1.nil?
       while is_next_iter
@@ -68,7 +68,7 @@ describe TonSdk::Net do
         collection: "accounts",
         result: "id balance",
       )
-      @res2 = TonSdk::Net.query_collection(@c_ctx.context, pr2)
+      @res2 = TonSdk::Net.query_collection(@c_ctx.context, pr2, is_single_thread_only: true)
       timeout_at = get_timeout_for_async_operation()
       is_next_iter = @res2.nil?
       while is_next_iter
@@ -91,7 +91,7 @@ describe TonSdk::Net do
         },
         result: "body created_at"
       )
-      @res3 = TonSdk::Net.query_collection(@c_ctx.context, pr3)
+      @res3 = TonSdk::Net.query_collection(@c_ctx.context, pr3, is_single_thread_only: true)
       timeout_at = get_timeout_for_async_operation()
       is_next_iter = @res3.nil?
       while is_next_iter
@@ -116,7 +116,7 @@ describe TonSdk::Net do
         result: "id now"
       )
 
-      @res = TonSdk::Net.wait_for_collection(@c_ctx.context, pr1)
+      @res = TonSdk::Net.wait_for_collection(@c_ctx.context, pr1, is_single_thread_only: true)
       timeout_at = get_timeout_for_async_operation()
       is_next_iter = @res.nil?
       while is_next_iter
@@ -133,7 +133,7 @@ describe TonSdk::Net do
     end
 
     it "subscribe_collection" do
-      cb = Proc.new do |a|
+      callback = Proc.new do |a|
         puts "subscribe_collection callback: #{a}"
       end
 
@@ -143,7 +143,7 @@ describe TonSdk::Net do
         result: "id"
       )
 
-      @res = TonSdk::Net.subscribe_collection(@c_ctx.context, pr1, handler_for_custom_response_type: cb)
+      @res = TonSdk::Net.subscribe_collection(@c_ctx.context, pr1, handler_for_custom_response: callback, is_single_thread_only: true)
       timeout_at = get_timeout_for_async_operation()
       is_next_iter = @res.nil?
       while is_next_iter
@@ -156,7 +156,7 @@ describe TonSdk::Net do
         expect(@res.success?).to eq true
       end
 
-      TonSdk::Net.unsubscribe(@c_ctx.context, @res.result) { |_| }
+      TonSdk::Net.unsubscribe(@c_ctx.context, @res.result)
       sleep(1)
     end
   end

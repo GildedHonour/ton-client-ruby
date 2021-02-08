@@ -61,8 +61,8 @@ module TonSdk
     # functions
     #
 
-    def self.convert_address(ctx, params)
-      resp = Interop::request_to_native_lib(ctx, "utils.convert_address", params.to_h.to_json)
+    def self.convert_address(ctx, params, is_single_thread_only: true)
+      resp = Interop::request_to_native_lib(ctx, "utils.convert_address", params.to_h.to_json, is_single_thread_only: is_single_thread_only)
       if resp.success?
         NativeLibResponsetResult.new(
           result: Utils::ResultOfConvertAddress.new(resp.result["address"])

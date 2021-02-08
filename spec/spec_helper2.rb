@@ -48,13 +48,12 @@ def get_grams_from_giver(ctx, to_address)
     send_events: false
   )
 
-  TonSdk::Processing::process_message(ctx, params) do |res|
-    if res.success?
-      res.result.out_messages.map do |msg|
-        Boc.parse_message(ctx, TonSdk::Boc::ParamsOfParse.new(msg))
-      end
-    else
-      raise SdkError.new(message: res.error)
+  res = TonSdk::Processing::process_message(ctx, params)
+  if res.success?
+    res.result.out_messages.map do |msg|
+      Boc.parse_message(ctx, TonSdk::Boc::ParamsOfParse.new(msg))
     end
+  else
+    raise SdkError.new(message: res.error)
   end
 end

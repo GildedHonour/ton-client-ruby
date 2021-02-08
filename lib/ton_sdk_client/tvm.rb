@@ -182,13 +182,13 @@ module TonSdk
     # functions
     #
 
-    def self.run_executor(ctx, params)
+    def self.run_executor(ctx, params, is_single_thread_only: false)
       pr_json = params.to_h.to_json
        resp = Interop::request_to_native_lib(
         ctx,
         "tvm.run_executor",
         pr_json,
-        single_thread_only: false
+        is_single_thread_only: is_single_thread_only
       )
       if resp.success?
         NativeLibResponsetResult.new(
@@ -205,13 +205,13 @@ module TonSdk
       end
     end
 
-    def self.run_tvm(ctx, params)
+    def self.run_tvm(ctx, params, is_single_thread_only: false)
       pr_json = params.to_h.to_json
       resp = Interop::request_to_native_lib(
         ctx,
         "tvm.run_tvm",
         pr_json,
-        single_thread_only: false
+        is_single_thread_only: is_single_thread_only
       )
       if resp.success?
         NativeLibResponsetResult.new(
@@ -226,13 +226,13 @@ module TonSdk
       end
     end
 
-    def self.run_get(ctx, params)
+    def self.run_get(ctx, params, is_single_thread_only: false)
       pr_json = params.to_h.to_json
       resp = Interop::request_to_native_lib(
         ctx,
         "tvm.run_get",
         pr_json,
-        single_thread_only: false
+        is_single_thread_only: is_single_thread_only
       )
       if resp.success?
         NativeLibResponsetResult.new(

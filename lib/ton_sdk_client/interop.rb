@@ -128,23 +128,23 @@ module TonSdk
       ctx,
       function_name,
       function_params_json = nil,
-      single_thread_only: true,
-      handler_for_custom_response_type: nil
+      is_single_thread_only: true,
+      client_callback: nil
     )
       function_name_tc_str = TcStringData.from_string(function_name)
       function_params_json_str = function_params_json || ""
       function_params_json_tc_str = TcStringData.from_string(function_params_json_str)
 
-      sm = Concurrent::Semaphore.new(1)
-      if single_thread_only == true
-        sm.acquire()
+      @sm = Concurrent::Semaphore.new(1)
+      if is_single_thread_only == true
+        @sm.acquire()
       end
 
 
               # todo debug
               # puts "\r\n*** #{function_name}"
 
-
+      # NOTE
       # using @@request_counter here to pass a @@request_counter and handlers and then retrieve them
       # is probably isn't needed.
       # Thanks to the way Ruby is, the same affect can be achived by a block which is an easier way.
@@ -152,11 +152,15 @@ module TonSdk
       # in order to keep a server happy,
       # because otherwise a server will, probably, reply in a wrong way.
 
+      # @handler_for_custom_response_copy = handler_for_custom_response
+      # @client_callback_copy = client_callback
+      # @handler_for_app_notify_copy = handler_for_app_notify
+
       self.tc_request(
         ctx,
         function_name_tc_str,
         function_params_json_tc_str,
-        @@request_counter.value
+        @@request_counter.value,
       ) do |req_id, params_json, response_type, is_finished|
 
         tc_data_json_content = if params_json[:len] > 0
@@ -167,8 +171,8 @@ module TonSdk
         end
 
 
-              # todo debug
-              # puts "\r\n***Interop > #{function_name} > TcResponseCode #{response_type}; #{tc_data_json_content}; is_finished: #{is_finished}"
+        # todo debug
+        puts "\r\n***Interop > #{function_name} > TcResponseCode #{response_type}; #{tc_data_json_content}; is_finished: #{is_finished}"
 
 
 
@@ -181,20 +185,22 @@ module TonSdk
             NativeLibResponsetResult.new(type_: :error, error: tc_data_json_content)
 
           when TcResponseCodes::APP_REQUEST
-            NativeLibResponsetResult.new(type_: :request, result: tc_data_json_content)
+            unless client_callback.nil?
+              client_callback.call(tc_data_json_content)
+            end
 
           when TcResponseCodes::APP_NOTIFY
-            NativeLibResponsetResult.new(type_: :notify, result: tc_data_json_content)
+            unless client_callback.nil?
+              client_callback.call(tc_data_json_content)
+            end
 
           when TcResponseCodes::NOP
             nil
 
           when TcResponseCodes::CUSTOM
-            if !handler_for_custom_response_type.nil?
-              handler_for_custom_response_type.call(tc_data_json_content)
+            unless client_callback.nil?
+              client_callback.call(tc_data_json_content)
             end
-
-            nil
 
           else
             raise ArgumentError.new("unsupported response type: #{response_type}")
@@ -204,14 +210,15 @@ module TonSdk
           logger.error(e)
           @ret = e
         ensure
-          if single_thread_only == true
-            sm.release()
+          if is_single_thread_only == true
+            @sm.release()
           end
         end
       end
 
-      if single_thread_only == true
-        sm.acquire()
+
+      if is_single_thread_only == true
+        @sm.acquire()
       end
 
       @@request_counter.increment()

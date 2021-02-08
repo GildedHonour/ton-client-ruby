@@ -215,7 +215,7 @@ module TonSdk
     # functions
     #
 
-    def self.start(ctx, params, app_browser_obj)
+    def self.start(ctx, params, app_browser_obj, is_single_thread_only: false)
       # TODO
       # 1) the handlers in 'start' and 'fetch' are identical
       # verify that it works and get rid of repetition
@@ -298,8 +298,8 @@ module TonSdk
         ctx,
         "debot.start",
         params.to_h.to_json,
-        app_obj_handler: app_resp_handler,
-        single_thread_only: false
+        client_callback: app_resp_handler,
+        is_single_thread_only: is_single_thread_only
       )
       if resp.success?
         NativeLibResponsetResult.new(
@@ -310,7 +310,7 @@ module TonSdk
       end
     end
 
-    def self.fetch(ctx, params, app_browser_obj)
+    def self.fetch(ctx, params, app_browser_obj, is_single_thread_only: false)
       # TODO
       # 1) the handlers in 'start' and 'fetch' are identical
       # verify that it works and get rid of repetition
@@ -393,8 +393,8 @@ module TonSdk
         ctx,
         "debot.fetch",
         params.to_h.to_json,
-        app_obj_handler: app_obj_handler,
-        single_thread_only: false
+        client_callback: app_obj_handler,
+        is_single_thread_only: is_single_thread_only
       )
       if resp.success?
         NativeLibResponsetResult.new(

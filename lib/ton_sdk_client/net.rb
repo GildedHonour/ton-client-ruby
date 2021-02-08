@@ -266,25 +266,14 @@ module TonSdk
     # functions
     #
 
-    def self.query_collection(ctx, params)
+    def self.query_collection(ctx, params, is_single_thread_only: true)
       resp = Interop::request_to_native_lib(
         ctx,
         "net.query_collection",
         params.to_h.to_json,
-        single_thread_only: true
+        is_single_thread_only: is_single_thread_only
       )
       if resp.success?
-
-
-        # TODO debug
-        # a1 = resp.result
-        # p "**** query_collection1: #{a1}"
-
-        # a2 = resp.result["result"]
-        # p "**** query_collection2: #{a2}"
-
-
-
         NativeLibResponsetResult.new(
           result: ResultOfQueryCollection.new(resp.result["result"])
         )
@@ -293,12 +282,12 @@ module TonSdk
       end
     end
 
-    def self.wait_for_collection(ctx, params)
+    def self.wait_for_collection(ctx, params, is_single_thread_only: false)
       resp = Interop::request_to_native_lib(
         ctx,
         "net.wait_for_collection",
         params.to_h.to_json,
-        single_thread_only: true
+        is_single_thread_only: is_single_thread_only
       )
       if resp.success?
         NativeLibResponsetResult.new(
@@ -313,13 +302,13 @@ module TonSdk
       Interop::request_to_native_lib(ctx, "net.unsubscribe", params.to_h.to_json)
     end
 
-    def self.subscribe_collection(ctx, params, handler_for_custom_response_type: nil)
+    def self.subscribe_collection(ctx, params, client_callback: nil, is_single_thread_only: false)
       resp = Interop::request_to_native_lib(
         ctx,
         "net.subscribe_collection",
         params.to_h.to_json,
-        handler_for_custom_response_type: handler_for_custom_response_type,
-        single_thread_only: true
+        client_callback: client_callback,
+        is_single_thread_only: is_single_thread_only
       )
       if resp.success?
         NativeLibResponsetResult.new(

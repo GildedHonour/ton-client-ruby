@@ -178,17 +178,17 @@ module TonSdk
     # functions
     #
 
-    def self.send_message(ctx, params, handler_for_custom_response_type = nil)
-      if (params.send_events == true) && handler_for_custom_response_type.nil?
-        raise ArgumentError.new("with `send_events` set to true, `handler_for_custom_response_type` may not be nil")
+    def self.send_message(ctx, params, handler_for_custom_response: nil, is_single_thread_only: false)
+      if (params.send_events == true) && handler_for_custom_response.nil?
+        raise ArgumentError.new("with `send_events` set to true, `handler_for_custom_response` may not be nil")
       end
 
       resp = Interop::request_to_native_lib(
         ctx,
         "processing.send_message",
         params.to_h.to_json,
-        handler_for_custom_response_type: handler_for_custom_response_type,
-        single_thread_only: false
+        handler_for_custom_response: handler_for_custom_response,
+        is_single_thread_only: is_single_thread_only
       )
       if resp.success?
         NativeLibResponsetResult.new(
@@ -199,17 +199,17 @@ module TonSdk
       end
     end
 
-    def self.wait_for_transaction(ctx, params, handler_for_custom_response_type = nil)
-      if (params.send_events == true) && handler_for_custom_response_type.nil?
-        raise ArgumentError.new("with `send_events` set to true, `handler_for_custom_response_type` may not be nil")
+    def self.wait_for_transaction(ctx, params, handler_for_custom_response: nil, is_single_thread_only: false)
+      if (params.send_events == true) && handler_for_custom_response.nil?
+        raise ArgumentError.new("with `send_events` set to true, `handler_for_custom_response` may not be nil")
       end
 
       resp = Interop::request_to_native_lib(
         ctx,
         "processing.wait_for_transaction",
         params.to_h.to_json,
-        handler_for_custom_response_type: handler_for_custom_response_type,
-        single_thread_only: false
+        handler_for_custom_response: handler_for_custom_response,
+        is_single_thread_only: is_single_thread_only
       )
       if resp.success?
         NativeLibResponsetResult.new(
@@ -225,17 +225,17 @@ module TonSdk
       end
     end
 
-    def self.process_message(ctx, params, handler_for_custom_response_type = nil)
-      if (params.send_events == true) && handler_for_custom_response_type.nil?
-        raise ArgumentError.new("with `send_events` set to true `handler_for_custom_response_type` may not be nil")
+    def self.process_message(ctx, params, handler_for_custom_response: nil, is_single_thread_only: false)
+      if (params.send_events == true) && handler_for_custom_response.nil?
+        raise ArgumentError.new("with `send_events` set to true `handler_for_custom_response` may not be nil")
       end
 
       resp = Interop::request_to_native_lib(
         ctx,
         "processing.process_message",
         params.to_h.to_json,
-        handler_for_custom_response_type: handler_for_custom_response_type,
-        single_thread_only: false
+        handler_for_custom_response: handler_for_custom_response,
+        is_single_thread_only: is_single_thread_only
       )
 
       case resp.type_
