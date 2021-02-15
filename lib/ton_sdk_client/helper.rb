@@ -16,5 +16,8 @@ module TonSdk
     end
 
     def self.base64_from_hex(hex_digest) = [[hex_digest].pack("H*")].pack("m0")
+
+    def data_class_object_to_json(a) = a.to_h.to_json
+
   end
 end

@@ -5,39 +5,54 @@ module TonSdk
     # types
     #
 
-    class Abi
-      TYPES = [:contract, :json, :handle, :serialized]
-      attr_reader :type_, :value
+    ABI_TYPES = [:contract, :json, :handle, :serialized]
 
-      def initialize(type_:, value:)
-        unless TYPES.include?(type_)
-          raise ArgumentError.new("type #{type_} is unknown; known types: #{TYPES}")
+    class Abi
+      attr_reader :type, :value
+
+      Variants = {
+        contract: [:value, AbiContract],
+        json: [:value, String],
+        handle: [:value, AbiHandle],
+        serialized: [:value, AbiContract],
+      }
+
+      def initialize(type, *args)
+        content = Variants[type] or raise TypeError, "invalid type #{type}"
+        (len = content.length / 2) == args.length or raise ArgumentError, "wrong number of values after #{type} (given #{args.length}, expected #{len})"
+
+        @type = type
+        len.times do |i|
+          arg, attr, attr_type = args[i], *content[2 * i, 2]
+          attr_type === arg or raise TypeError, "#{arg.class} isn't #{attr_type}"
+          instance_variable_set :"@#{attr}", arg
         end
-        @type_ = type_
-        @value = value
       end
+
 
       def to_h
-        h1 = {
-          type: Helper.sym_to_capitalized_case_str(@type_)
-        }
+        raise 'not implemented'
 
-        h2 = case @type_
-        when :contract, :serialized
-          {
-            value: @value.to_h
-          }
-        when :json, :handle
-          {
-            value: @value
-          }
-        else
-          raise ArgumentError.new("type #{type_} is unknown; known types: #{TYPES}")
-        end
+        # TODO for each instance variable
+        # k = inst_variable.to_s
+        # val = (:value ==> if not_nil && defined? :to_h, call to_h, otherwise :value)
+        # k: :val
 
-        h1.merge(h2)
+        # merge with 'instance_variables_to_json'
       end
+
+      # TODO make it 'extend' -> InstanceVariablesToJsonConverter
+      def instance_variables_to_json
+        raise 'not implemented'
+      end
+
+
     end
+
+
+
+
+
 
     class FunctionHeader
       attr_reader :expire, :time, :pubkey
